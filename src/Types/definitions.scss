@@ -1,0 +1,12 @@
+// Colours
+$background-grey: #ddd;
+
+@mixin panel-border {
+  background-color: $background-grey;
+  border: .5rem solid;
+  border-bottom-color: darken($background-grey, 10%);
+  border-left-color: lighten($background-grey, 5%);
+  border-right-color: darken($background-grey, 5%);
+  border-top-color: lighten($background-grey, 10%);
+}
+  

@@ -1,0 +1,49 @@
+@import '../Types/definitions';
+
+.frame {
+  align-items: stretch;
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+
+  & > div {
+    @include panel-border;
+  }
+}
+
+.header {
+  align-items: flex-end;
+  display: flex;
+  flex: row nowrap;
+  font-size: 1.2em;
+  justify-content: flex-end;
+  position: relative;
+  width: 100vw;
+
+  & a {
+    margin-right: .5em;
+  }
+
+  & .spacer {
+    flex: 1;
+  }
+
+  & .logo {
+    background-image: url('./rolling-dices.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 4em;
+    width: 4em;
+  }
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+  bottom: 0;
+  font-size: .8em;
+  height: 2.5em;
+  text-align: center;
+}

@@ -5,6 +5,7 @@
     ],
     "jsRules": {},
     "rules": {
+        "indent": [true, "spaces", 2],
         "no-unused-expression": [true, "allow-new"]
     },
     "rulesDirectory": []
