@@ -5,13 +5,9 @@ import Header from "./Header";
 
 export default function Frame(props: any) {
   return (
-    <div
-      className="frame"
-    >
+    <div className="frame">
       <Header />
-      <div
-        className="content"
-      >
+      <div className="content">
         {props.children}
       </div>
       <Footer />
