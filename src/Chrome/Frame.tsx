@@ -1,13 +1,15 @@
 import React, { Component } from "react";
+import "./chrome.scss";
 import Footer from "./Footer";
-import "./frame.scss";
 import Header from "./Header";
+import SideBar from "./SideBar";
 
 export default function Frame(props: any) {
   return (
     <div className="frame">
       <Header />
       <div className="content">
+        <SideBar />
         {props.children}
       </div>
       <Footer />
