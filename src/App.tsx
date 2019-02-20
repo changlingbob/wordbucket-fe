@@ -2,12 +2,15 @@ import React from "react";
 import "./App.scss";
 import Frame from "./Chrome/Frame";
 import LoadText from "./File/LoadText";
+import { NavigationProvider } from "./State/navigation";
 
 function App() {
   return (
-    <Frame>
-      <LoadText />
-    </Frame>
+    <NavigationProvider>
+      <Frame>
+        <LoadText />
+      </Frame>
+    </NavigationProvider>
   );
 }
 
