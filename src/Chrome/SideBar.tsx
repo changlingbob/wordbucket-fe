@@ -1,11 +1,22 @@
 import React from "react";
+import Bucket from "wordbucket";
+import { BucketState, INavigationState } from "../State/navigation";
+import Folder from "./Folder/Folder";
 
 export default function SideBar() {
   return (
-    <div className="sidebar">
-      <div className="entry">Item 1</div>
-      <div className="entry">Item 2</div>
-      <div className="entry">Item 3</div>
-    </div>
+    <BucketState
+      render={(state: INavigationState) => {
+        return (
+          <div
+            className="sidebar"
+          >
+            <Folder
+              state={state}
+            />
+          </div>
+        );
+      }}
+    />
   );
 }

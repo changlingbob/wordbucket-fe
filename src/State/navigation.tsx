@@ -2,10 +2,11 @@ import classNames from "classnames";
 import React, { ReactNode } from "react";
 import Bucket from "wordbucket";
 
-interface INavigationState {
+export interface INavigationState {
   pathname: string;
   bucket: Bucket;
   navigate(pathname: string): void;
+  inPath(bucketName: string): boolean;
 }
 
 interface INavigationProps {
@@ -22,6 +23,7 @@ export class NavigationProvider extends React.Component {
 
     this.state = {
       bucket: new Bucket(),
+      inPath: this.inPath,
       navigate: this.navigate,
       pathname: window.location.pathname,
     };
@@ -45,7 +47,12 @@ export class NavigationProvider extends React.Component {
   public navigate = (pathname: string) => {
     this.setState({ pathname });
 
-    window.history.pushState(null, "", pathname);
+    window.history.pushState(null, "", pathname.replace(/\./g, "/"));
+  }
+
+  public inPath = (bucketName: string) => {
+
+    return bucketName.replace(/\./g, "/") === this.state.pathname;
   }
 }
 
@@ -57,20 +64,20 @@ export const NavLink = ({ ...props }) =>
         {...props}
         className={classNames(
           props.className,
-          {active: navigation.pathname === props.href},
+          {active: navigation.pathname === props.path},
         )}
         onClick={(e) => {
           e.preventDefault();
-          navigation.navigate(props.href);
+          navigation.navigate(props.path);
         }}
       />
     }
   </NavigationContext.Consumer>;
 
-export const BucketState = ({ render }: {render: (bucket: Bucket) => ReactNode}) =>
+export const BucketState = ({ render }: {render: (state: INavigationState) => ReactNode}) =>
   <NavigationContext.Consumer>
     {
-      ({bucket}) => render(bucket)
+      (state) => render(state)
     }
   </NavigationContext.Consumer>;
 

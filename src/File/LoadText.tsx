@@ -1,15 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 import Bucket from "wordbucket";
-import { BucketState } from "../State/navigation";
+import { BucketState, INavigationState } from "../State/navigation";
 
-export default class LoadText extends Component {
-  public render() {
-    return (
-      <BucketState render={(bucket: Bucket) => {
-        return (
-          <div>{bucket.generate("hex")}</div>
-        );
-      }}/>
-    );
-  }
-}
+const LoadText = () => {
+  return (
+    <BucketState render={(state: INavigationState) => {
+      return (
+        <div>{state.bucket.generate(state.pathname)}</div>
+      );
+    }}/>
+  );
+};
+
+export default LoadText;
