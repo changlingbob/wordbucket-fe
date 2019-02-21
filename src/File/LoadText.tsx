@@ -6,7 +6,7 @@ const LoadText = () => {
   return (
     <BucketState render={(state: INavigationState) => {
       return (
-        <div>{state.bucket.generate(state.pathname)}</div>
+        <div>{state.bucket.generate(state.path)}</div>
       );
     }}/>
   );

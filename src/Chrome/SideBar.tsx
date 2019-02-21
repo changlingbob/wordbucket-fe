@@ -13,6 +13,7 @@ export default function SideBar() {
           >
             <Folder
               state={state}
+              collapsed={false}
             />
           </div>
         );

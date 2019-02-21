@@ -2,4 +2,18 @@
   border-left: 1px solid black;
   border-top: 1px solid black;
   padding-left: 1em;
+
+  .toggle {
+    display: inline-block;
+    text-align: center;
+    width: 1em;
+    margin-left: -1em;
+  }
+  .title {
+    display: inline-block;
+  }
+
+  &.collapsed {
+    display: none;
+  }
 }
