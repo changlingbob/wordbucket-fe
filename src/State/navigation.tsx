@@ -47,7 +47,7 @@ export class NavigationProvider extends React.Component {
   public navigate = (pathname: string) => {
     this.setState({ pathname });
 
-    window.history.pushState(null, "", pathname.replace(/\./g, "/"));
+    window.history.pushState(null, "", "/" + pathname.replace(/\./g, "/"));
   }
 
   public inPath = (bucketName: string) => {
