@@ -7,9 +7,9 @@ export default function SideBar() {
   return (
     <BucketState
       render={(state: INavigationState) => {
-        return (
+        const container = (
           <div
-            className="sidebar"
+            className ="sidebar"
           >
             <Folder
               state={state}
@@ -17,6 +17,8 @@ export default function SideBar() {
             />
           </div>
         );
+
+        return container;
       }}
     />
   );

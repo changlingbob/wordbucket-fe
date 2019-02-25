@@ -43,7 +43,8 @@
 
   .sidebar {
     border-right: .5rem solid darken($background-grey, 10%);
-    width: 12em;
+    overflow: scroll hidden;
+    width: 200px;
   }
 }
 
