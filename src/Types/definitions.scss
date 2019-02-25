@@ -1,5 +1,9 @@
 // Colours
 $background-grey: #ddd;
+$foldable-white: #fff;
+$solid-black: #000;
+
+$simple-border: 1px solid $solid-black;
 
 @mixin panel-border {
   background-color: $background-grey;

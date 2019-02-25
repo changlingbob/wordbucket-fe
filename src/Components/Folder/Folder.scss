@@ -1,6 +1,8 @@
+@import '../../Types/definitions';
+
 .folder {
-  border-left: 1px solid black;
-  border-top: 1px solid black;
+  border-left: $simple-border;
+  border-top: $simple-border;
   padding-left: 1em;
 
   .title {
@@ -8,8 +10,8 @@
   }
 
   .toggle {
-    background: white;
-    border: 1px solid black;
+    background: $foldable-white;
+    border: $simple-border;
     display: inline-block;
     font-size: .6em;
     height: .6rem;
@@ -36,7 +38,7 @@
     }
 
     &:last-child {
-      border-bottom: 1px solid black;
+      border-bottom: $simple-border;
     }
   }
 }
