@@ -1,7 +1,7 @@
 import React from "react";
 import Bucket from "wordbucket";
+import Folder from "../Components/Folder/Folder";
 import { BucketState, INavigationState } from "../State/navigation";
-import Folder from "./Folder/Folder";
 
 export default function SideBar() {
   return (

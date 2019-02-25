@@ -9,10 +9,6 @@ export interface INavigationState {
   inPath(bucketName: string): boolean;
 }
 
-interface INavigationProps {
-  children: (navigation: INavigationState) => Element;
-}
-
 const NavigationContext = React.createContext({} as INavigationState);
 
 export class NavigationProvider extends React.Component {
