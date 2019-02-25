@@ -57,12 +57,15 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
             onClick={() => {
               this.setState({collapseChildren: !this.state.collapseChildren});
             }}
-          >
+            >
             {this.state.collapseChildren ? "+" : "-"}
           </div> : ""}
           <NavLink
             className="title"
             path={bucket.getName()}
+            onClick={() => {
+              this.setState({collapseChildren: false});
+            }}
           >
             {bucket.getName()}
           </NavLink>
