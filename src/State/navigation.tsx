@@ -84,6 +84,7 @@ export const NavLink = ({ ...props }) =>
         onClick={(e) => {
           props.onClick(e);
           navigation.navigate(props.path);
+          e.preventDefault();
         }}
       />
     }
