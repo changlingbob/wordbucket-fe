@@ -55,8 +55,6 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           {this.state.bucket.getChildren().length > 0 ? <div
             className="toggle"
             onClick={() => {
-              // tslint:disable-next-line no-console
-              console.log(`clicky: ${this.state.bucket.getName()}`);
               this.setState({collapseChildren: !this.state.collapseChildren});
             }}
           >
