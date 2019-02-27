@@ -43,8 +43,15 @@
 
   .sidebar {
     border-right: .5rem solid darken($background-grey, 10%);
-    overflow: scroll hidden;
+    overflow: hidden scroll;
     width: 200px;
+
+    &::after {
+      cursor: ew-resize;
+      height: 100%;
+      margin-left: -10px;
+      width: 10px;
+    }
   }
 }
 

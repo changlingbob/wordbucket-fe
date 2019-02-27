@@ -1,8 +1,8 @@
 @import '../../Types/definitions';
 
 .folder {
-  border-left: $simple-border;
-  border-top: $simple-border;
+  border-left: $folder-border;
+  border-top: $folder-border;
   padding-left: 1em;
 
   .title {
@@ -38,7 +38,7 @@
     }
 
     &:last-child {
-      border-bottom: $simple-border;
+      border-bottom: $folder-border;
     }
   }
 }
