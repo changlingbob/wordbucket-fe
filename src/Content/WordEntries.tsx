@@ -11,11 +11,11 @@ const WordEntries = () => {
       const words: WordEntry[] = Bucket.get(state.path).getWords();
 
       for (const word of words) {
-        wordEntries.push((<WordEdit word={word} />));
+        wordEntries.push((<WordEdit key={word.words} word={word} />));
       }
 
       return (
-        <div className="word-entries">
+        <div className="words">
           {wordEntries}
         </div>
       );
