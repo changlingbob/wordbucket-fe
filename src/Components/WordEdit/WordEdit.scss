@@ -1,0 +1,46 @@
+@import '../../Types/definitions';
+
+.folder {
+  border-left: $folder-border;
+  border-top: $folder-border;
+  padding-left: 1em;
+
+  .title {
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  .toggle {
+    background: $foldable-white;
+    border: $simple-border;
+    cursor: pointer;
+    display: inline-block;
+    font-size: .6em;
+    height: .6rem;
+    left: .2rem;
+    line-height: .6rem;
+    margin: 0 .4rem 0 -1rem;
+    position: relative;
+    text-align: center;
+    top: -.1rem;
+    width: .6rem;
+  }
+
+  &.collapsed {
+    display: none;
+  }
+}
+
+.sidebar {
+  > .folder {
+    border-left: 0;
+
+    &:first-child {
+      border-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: $folder-border;
+    }
+  }
+}

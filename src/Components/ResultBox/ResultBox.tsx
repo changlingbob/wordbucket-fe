@@ -1,4 +1,5 @@
 import React from "react";
+import Bucket from "wordbucket";
 import { BucketState, INavigationState } from "../../State/navigation";
 import "./ResultBox.scss";
 
@@ -8,7 +9,7 @@ class ResultBox extends React.Component {
       <BucketState render={(state: INavigationState) => {
         return (
           <div className="result-container">
-            <div className="results">{state.bucket.generate(state.path)}</div>
+            <div className="results">{Bucket.generate(state.path)}</div>
             <div
               className="roller"
               onClick={(ev) => this.forceUpdate()}
