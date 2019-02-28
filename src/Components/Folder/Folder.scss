@@ -11,8 +11,8 @@
   }
 
   .toggle {
+    @include simple-border($solid-black);
     background: $foldable-white;
-    border: $simple-border;
     cursor: pointer;
     display: inline-block;
     font-size: .6em;

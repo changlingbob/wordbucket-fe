@@ -9,68 +9,69 @@
   & > div {
     @include panel-border;
   }
-}
 
-.header {
-  align-items: flex-end;
-  display: flex;
-  flex: row nowrap;
-  font-size: 1.2em;
-  justify-content: flex-end;
-  position: relative;
-  width: 100vw;
-
-  & a {
-    margin-right: .5em;
-  }
-
-  & .spacer {
-    flex: 1;
-  }
-
-  & .logo {
-    background-image: url('./rolling-dices.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    height: 4em;
-    width: 4em;
-  }
-}
-
-.content {
-  display: flex;
-  flex: 1;
-
-  .sidebar {
-    // border-right: .5rem double darken($background-grey, 10%);
-    overflow: hidden scroll;
+  .header {
+    align-items: flex-end;
+    display: flex;
+    flex: row nowrap;
+    font-size: 1.2em;
+    justify-content: flex-end;
     position: relative;
-    width: 200px;
+    width: 100vw;
 
-    &::after {
-      background: linear-gradient(to right,
-        darken($background-grey, 10%) 0%,
-        darken($background-grey, 10%) 10%,
-        lighten($background-grey, 5%) 40%,
-        darken($background-grey, 10%) 40%,
-        darken($background-grey, 10%) 60%,
-        lighten($background-grey, 5%) 60%,
-        darken($background-grey, 10%) 90%,
-        darken($background-grey, 10%) 100%);
-      bottom: 0;
-      content: ' ';
-      cursor: ew-resize;
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 10px;
+    & a {
+      margin-right: .5em;
+    }
+
+    & .spacer {
+      flex: 1;
+    }
+
+    & .logo {
+      background-image: url('./rolling-dices.svg');
+      background-repeat: no-repeat;
+      background-size: contain;
+      height: 4em;
+      width: 4em;
     }
   }
-}
 
-.footer {
-  bottom: 0;
-  font-size: .8em;
-  height: 2.5em;
-  text-align: center;
+  .center {
+    display: flex;
+    flex: 1;
+
+    .sidebar {
+      flex-grow: 0;
+      flex-shrink: 0;
+      overflow: hidden scroll;
+      position: relative;
+      width: 200px;
+
+      &::after {
+        background: linear-gradient(to right,
+          darken($background-grey, 10%) 0%,
+          darken($background-grey, 10%) 10%,
+          lighten($background-grey, 5%) 40%,
+          darken($background-grey, 10%) 40%,
+          darken($background-grey, 10%) 60%,
+          lighten($background-grey, 5%) 60%,
+          darken($background-grey, 10%) 90%,
+          darken($background-grey, 10%) 100%);
+        bottom: 0;
+        content: ' ';
+        cursor: ew-resize;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 10px;
+      }
+    }
+  }
+
+  .footer {
+    bottom: 0;
+    font-size: .8em;
+    height: 2.5em;
+    text-align: center;
+  }
 }

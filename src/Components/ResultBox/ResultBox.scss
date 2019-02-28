@@ -1,0 +1,35 @@
+@import '../../Types/definitions';
+
+.result-container {
+  align-items: flex-start;
+  display: flex;
+
+  .results {
+    @include simple-border($solid-black);
+    background: $solid-white;
+    border-radius: .25em;
+    cursor: text;
+    flex-grow: 1;
+    height: auto;
+    margin: 1em;
+    max-height: 5.5em;
+    min-height: 1.64em;
+    overflow-y: scroll;
+    padding: .2em;
+    user-select: text;
+  }
+
+  .roller {
+    @include simple-border($solid-black);
+    background: darken($background-grey, 10%);
+    border-radius: .25em;
+    cursor: pointer;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: auto;
+    margin: 1em;
+    margin-left: 0;
+    padding: .2em .5em;
+    text-align: center;
+  }
+}

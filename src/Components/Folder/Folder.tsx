@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import React from "react";
-import Bucket from "wordbucket";
 import { INavigationState, NavLink } from "../../State/navigation";
 import "./Folder.scss";
 

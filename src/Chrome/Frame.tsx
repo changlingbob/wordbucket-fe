@@ -8,7 +8,7 @@ export default function Frame(props: any) {
   return (
     <div className="frame">
       <Header />
-      <div className="content">
+      <div className="center">
         <SideBar />
         {props.children}
       </div>
