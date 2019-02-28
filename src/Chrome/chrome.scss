@@ -42,14 +42,27 @@
   flex: 1;
 
   .sidebar {
-    border-right: .5rem solid darken($background-grey, 10%);
+    // border-right: .5rem double darken($background-grey, 10%);
     overflow: hidden scroll;
+    position: relative;
     width: 200px;
 
     &::after {
+      background: linear-gradient(to right,
+        darken($background-grey, 10%) 0%,
+        darken($background-grey, 10%) 10%,
+        lighten($background-grey, 5%) 40%,
+        darken($background-grey, 10%) 40%,
+        darken($background-grey, 10%) 60%,
+        lighten($background-grey, 5%) 60%,
+        darken($background-grey, 10%) 90%,
+        darken($background-grey, 10%) 100%);
+      bottom: 0;
+      content: ' ';
       cursor: ew-resize;
-      height: 100%;
-      margin-left: -10px;
+      position: absolute;
+      right: 0;
+      top: 0;
       width: 10px;
     }
   }

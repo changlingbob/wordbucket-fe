@@ -6,12 +6,14 @@
   padding-left: 1em;
 
   .title {
+    cursor: pointer;
     display: inline-block;
   }
 
   .toggle {
     background: $foldable-white;
     border: $simple-border;
+    cursor: pointer;
     display: inline-block;
     font-size: .6em;
     height: .6rem;

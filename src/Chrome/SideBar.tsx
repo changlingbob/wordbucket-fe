@@ -15,7 +15,7 @@ class SideBar extends React.Component<any, ISideBarState> {
     this.state = {
       lastDragX: 0,
       resizeMode: false,
-      width: 200,
+      width: 275,
     };
   }
 
@@ -25,6 +25,7 @@ class SideBar extends React.Component<any, ISideBarState> {
     function dragStart(ev: React.MouseEvent<HTMLDivElement>) {
       if (ev.nativeEvent.offsetX > self.state.width - 10) {
         document.body.addEventListener("pointermove", dragMove);
+        document.body.addEventListener("pointerleave", cancelDrag);
         self.setState({
           lastDragX: ev.pageX,
           resizeMode: true,
@@ -32,8 +33,9 @@ class SideBar extends React.Component<any, ISideBarState> {
       }
     }
 
-    function cancelDrag(ev: React.MouseEvent<HTMLDivElement>) {
+    function cancelDrag(ev: any) {
       document.body.removeEventListener("pointermove", dragMove);
+      document.body.removeEventListener("pointerleave", cancelDrag);
       self.setState({resizeMode: false});
     }
 
