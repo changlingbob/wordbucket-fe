@@ -28,9 +28,10 @@
     }
 
     & .logo {
-      background-image: url('./rolling-dices.svg');
+      background-image: url('./role-game.svg');
+      background-position: center;
       background-repeat: no-repeat;
-      background-size: contain;
+      background-size: 80% 80%;
       height: 4em;
       width: 4em;
     }
