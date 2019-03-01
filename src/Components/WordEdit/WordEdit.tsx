@@ -1,6 +1,6 @@
 import React from "react";
-import { WordEntry } from "wordbucket";
-import { updateWord } from "../../State/bucketmanager";
+import Bucket, { WordEntry } from "wordbucket";
+import { removeWord, updateWord } from "../../State/bucketmanager";
 import "./WordEdit.scss";
 
 interface IWordEditState {
@@ -8,35 +8,24 @@ interface IWordEditState {
   words: string;
 }
 
-class WordEdit extends React.Component<{word: WordEntry}, IWordEditState> {
+class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry}, IWordEditState> {
   private wordsDebounce: any;
   private weightDebounce: any;
   private word: WordEntry;
+  private bucket: Bucket;
 
-  constructor(props: {word: WordEntry}) {
+  constructor(props: {bucket: Bucket, word: WordEntry}) {
     super(props);
     this.state = {
       weight: props.word.weight,
       words: props.word.words,
     };
     this.word = props.word;
+    this.bucket = props.bucket;
 
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
-  }
-
-  public weightChange(event: any) {
-    const doUpdate = this.doUpdate.bind(this);
-    this.setState({weight: event.target.value});
-    clearInterval(this.weightDebounce);
-    this.weightDebounce = setTimeout(doUpdate, 300);
-  }
-
-  public wordChange(event: any) {
-    const doUpdate = this.doUpdate.bind(this);
-    this.setState({words: event.target.value});
-    clearInterval(this.wordsDebounce);
-    this.wordsDebounce = setTimeout(doUpdate, 300);
+    this.removeWord = this.removeWord.bind(this);
   }
 
   public render() {
@@ -46,16 +35,38 @@ class WordEdit extends React.Component<{word: WordEntry}, IWordEditState> {
       >
         <input
           className="weight"
-          value= {this.state.weight}
-          onChange= {this.weightChange}
+          value={this.state.weight}
+          onChange={this.weightChange}
         />
         <input
           className="words"
-          value= {this.state.words}
-          onChange= {this.wordChange}
+          value={this.state.words}
+          onChange={this.wordChange}
+        />
+        <div
+          className="delete"
+          onClick={this.removeWord}
         />
       </div>
     );
+  }
+
+  private weightChange(event: any) {
+    const doUpdate = this.doUpdate.bind(this);
+    this.setState({weight: event.target.value});
+    clearInterval(this.weightDebounce);
+    this.weightDebounce = setTimeout(doUpdate, 300);
+  }
+
+  private wordChange(event: any) {
+    const doUpdate = this.doUpdate.bind(this);
+    this.setState({words: event.target.value});
+    clearInterval(this.wordsDebounce);
+    this.wordsDebounce = setTimeout(doUpdate, 300);
+  }
+
+  private removeWord() {
+    removeWord(this.word, this.bucket);
   }
 
   private doUpdate() {

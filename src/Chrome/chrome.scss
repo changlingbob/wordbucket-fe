@@ -29,10 +29,7 @@
     }
 
     & .logo {
-      background-image: url('./role-game.svg');
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: 80% 80%;
+      @include background-image(url('../Images/role-game.svg'));
       height: 4em;
       width: 4em;
     }

@@ -1,9 +1,16 @@
-import { WordEntry } from "wordbucket";
+import Bucket, { WordEntry } from "wordbucket";
 
-interface IUndoable {
-  location: string;
-  undo: () => void;
-  redo: () => void;
+class Undoable {
+  public undo: () => void;
+  public redo: () => void;
+  public location: string;
+
+  // tslint:disable-next-line:no-shadowed-variable
+  constructor({redo, undo}: {redo: () => void, undo: () => void}) {
+    this.undo = undo;
+    this.redo = redo;
+    this.location = document.location.pathname;
+  }
 }
 
 const undoQueue: any[] = [];
@@ -11,11 +18,30 @@ const redoQueue: any[] = [];
 
 export function updateWord(word: WordEntry, words: string, weight: number) {
   const currentState = {words: word.words, weight: word.weight};
-  const memo: IUndoable = {
-    location: document.location.pathname,
+  const memo = new Undoable({
     redo: () => word.update({words, weight}),
     undo: () => word.update(currentState),
-  };
+  });
+
+  undoQueue.push(memo);
+  memo.redo();
+}
+
+export function removeWord(word: WordEntry, bucket: Bucket) {
+  const memo = new Undoable({
+    redo: () => bucket.removeWords({word}),
+    undo: () => bucket.putWords(word),
+  });
+
+  undoQueue.push(memo);
+  memo.redo();
+}
+
+export function addWord(word: WordEntry, bucket: Bucket) {
+  const memo = new Undoable({
+    redo: () => bucket.putWords(word),
+    undo: () => bucket.removeWords({word}),
+  });
 
   undoQueue.push(memo);
   memo.redo();

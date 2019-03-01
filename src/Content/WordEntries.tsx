@@ -8,10 +8,11 @@ const WordEntries = () => {
   return (
     <BucketState render={(state: INavigationState) => {
       const wordEntries: JSX.Element[] = [];
-      const words: WordEntry[] = Bucket.get(state.path).getWords();
+      const bucket = Bucket.get(state.path);
+      const words: WordEntry[] = bucket.getWords();
 
       for (const word of words) {
-        wordEntries.push((<WordEdit key={word.words} word={word} />));
+        wordEntries.push((<WordEdit key={word.words} word={word} bucket={bucket} />));
       }
 
       return (

@@ -6,6 +6,9 @@ export default function Footer() {
       <span>Credits: </span> Icons by&nbsp;
       <a href="https://www.freepik.com/">
         Freepik
+      </a> and&nbsp;
+      <a href="https://www.flaticon.com/authors/sarfraz-shoukat" title="Sarfraz Shoukat">
+        Sarfraz Shoukat
       </a> from&nbsp;
       <a href="https://www.flaticon.com/" title="Flaticon">
         www.flaticon.com
