@@ -5,6 +5,10 @@
   user-select: none;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   font-family: sans-serif;
   margin: 0;
