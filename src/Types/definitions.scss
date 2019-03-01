@@ -13,11 +13,10 @@ $solid-white: #fff;
   overflow-y: scroll;
 }
 
-@mixin body-rules {
+@mixin body-style {
+  margin: .2em;
   border-radius: .25em;
   height: auto;
-  margin: .2em 1em;
-  max-height: 5.5em;
   min-height: 1.64em;
   padding: .2em;
 }

@@ -3,40 +3,62 @@ import { WordEntry } from "wordbucket";
 import "./WordEdit.scss";
 
 interface IWordEditState {
-  value: string;
+  weight: number;
+  words: string;
 }
 
 class WordEdit extends React.Component<{word: WordEntry}, IWordEditState> {
-  private updateDebounce: any;
+  private wordsDebounce: any;
+  private weightDebounce: any;
   private word: WordEntry;
 
   constructor(props: {word: WordEntry}) {
     super(props);
-    this.state = {value: props.word.words};
+    this.state = {
+      weight: props.word.weight,
+      words: props.word.words,
+    };
     this.word = props.word;
 
-    this.handleChange = this.handleChange.bind(this);
+    this.wordChange = this.wordChange.bind(this);
+    this.weightChange = this.weightChange.bind(this);
   }
 
-  public handleChange(event: any) {
+  public weightChange(event: any) {
     const doUpdate = this.doUpdate.bind(this);
-    this.setState({value: event.target.value});
-    clearInterval(this.updateDebounce);
-    this.updateDebounce = setTimeout(doUpdate, 300);
+    this.setState({weight: event.target.value});
+    clearInterval(this.weightDebounce);
+    this.weightDebounce = setTimeout(doUpdate, 300);
+  }
+
+  public wordChange(event: any) {
+    const doUpdate = this.doUpdate.bind(this);
+    this.setState({words: event.target.value});
+    clearInterval(this.wordsDebounce);
+    this.wordsDebounce = setTimeout(doUpdate, 300);
   }
 
   public render() {
     return(
-      <input
+      <div
         className="wordedit"
-        value= {this.state.value}
-        onChange= {this.handleChange}
-      />
+      >
+        <input
+          className="weight"
+          value= {this.state.weight}
+          onChange= {this.weightChange}
+        />
+        <input
+          className="words"
+          value= {this.state.words}
+          onChange= {this.wordChange}
+        />
+      </div>
     );
   }
 
   private doUpdate() {
-    this.word.update({words: this.state.value});
+    this.word.update({words: this.state.words, weight: this.state.weight});
   }
 }
 

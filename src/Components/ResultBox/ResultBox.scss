@@ -3,20 +3,22 @@
 .result-container {
   align-items: flex-start;
   display: flex;
-  margin: 1em 0;
+  flex: 0 0 auto;
+  margin: 1em;
 
   .results {
-    @include body-rules;
+    @include body-style;
     @include scroll-y;
     @include simple-border($solid-black);
     background: $solid-white;
     cursor: text;
     flex-grow: 1;
+    max-height: 5.5em;
     user-select: text;
   }
 
   .roller {
-    @include body-rules;
+    @include body-style;
     @include simple-border($solid-black);
     background: darken($background-grey, 10%);
     cursor: pointer;
