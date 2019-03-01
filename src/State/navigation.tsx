@@ -96,8 +96,3 @@ export const BucketState = ({ render }: {render: (state: INavigationState) => Re
       (state) => render(state)
     }
   </NavigationContext.Consumer>;
-
-// export const Route = ({ children, href }: {href: string, children: Element[]}) =>
-//   <NavigationContext.Consumer>
-//     {(navigation: INavigationState) => navigation.path === href ? children : null}
-//   </NavigationContext.Consumer>;

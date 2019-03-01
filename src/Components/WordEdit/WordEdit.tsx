@@ -1,5 +1,6 @@
 import React from "react";
 import { WordEntry } from "wordbucket";
+import { updateWord } from "../../State/bucketmanager";
 import "./WordEdit.scss";
 
 interface IWordEditState {
@@ -58,7 +59,7 @@ class WordEdit extends React.Component<{word: WordEntry}, IWordEditState> {
   }
 
   private doUpdate() {
-    this.word.update({words: this.state.words, weight: this.state.weight});
+    updateWord(this.word, this.state.words, this.state.weight);
   }
 }
 
