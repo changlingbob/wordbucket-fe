@@ -4,7 +4,7 @@
   align-items: stretch;
   display: flex;
   flex-flow: column nowrap;
-  min-height: 100vh;
+  height: 100vh;
 
   & > div {
     @include panel-border;
@@ -12,12 +12,13 @@
 
   .header {
     align-items: flex-end;
+    box-sizing: unset;
     display: flex;
-    flex: row nowrap;
+    flex: 0 0 4em;
+    flex-flow: row nowrap;
     font-size: 1.2em;
     justify-content: flex-end;
     position: relative;
-    width: 100vw;
 
     & a {
       margin-right: .5em;
@@ -71,6 +72,7 @@
 
   .footer {
     bottom: 0;
+    flex: 0 0;
     font-size: .8em;
     height: 2.5em;
     text-align: center;

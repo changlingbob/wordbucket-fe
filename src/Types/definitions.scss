@@ -8,6 +8,20 @@ $solid-white: #fff;
   border: 1px solid $color;
 }
 
+@mixin scroll-y {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: scroll;
+}
+
+@mixin body-rules {
+  border-radius: .25em;
+  height: auto;
+  margin: .2em 1em;
+  max-height: 5.5em;
+  min-height: 1.64em;
+  padding: .2em;
+}
+
 $folder-border: 1px dotted $solid-white;
 
 @mixin panel-border {

@@ -1,5 +1,6 @@
 import React from "react";
 import { WordEntry } from "wordbucket";
+import "./WordEdit.scss";
 
 interface IWordEditState {
   value: string;
@@ -27,8 +28,9 @@ class WordEdit extends React.Component<{word: WordEntry}, IWordEditState> {
   public render() {
     return(
       <input
-          value= {this.state.value}
-          onChange= {this.handleChange}
+        className="wordedit"
+        value= {this.state.value}
+        onChange= {this.handleChange}
       />
     );
   }

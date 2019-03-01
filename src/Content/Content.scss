@@ -1,12 +1,12 @@
 @import '../Types/definitions';
 
 .content {
+  @include scroll-y;
   align-items: stretch;
   display: flex;
   flex-flow: column nowrap;
   flex-grow: 1;
   height: 100%;
-  overflow-y: scroll;
 }
 
 .words {
