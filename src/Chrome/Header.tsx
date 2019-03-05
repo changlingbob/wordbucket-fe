@@ -1,24 +1,12 @@
 import React from "react";
-
-function importClick() {
-  return;
-}
-
-function exportClick() {
-  return;
-}
+import Controls from "../Components/Controls/Controls";
 
 export default function Footer() {
   return (
     <div className="header">
       <div className="logo"/>
       <div className="spacer"/>
-      <a onClick={importClick}>
-        Import
-      </a>
-      <a onClick={exportClick}>
-        Export
-      </a>
+      <Controls />
     </div>
   );
 }

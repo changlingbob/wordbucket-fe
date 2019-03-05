@@ -20,10 +20,7 @@
 
   .delete {
     @include background-image(url('../../Images/delete-page.svg'));
-    @include body-style;
-    @include simple-border($solid-black);
-    background-color: darken($background-grey, 10%);
-    cursor: pointer;
+    @include button;
     flex: 0 2em;
     flex-grow: 0;
     flex-shrink: 0;

@@ -1,0 +1,10 @@
+@import '../../Types/definitions';
+
+.controls {
+  font-size: 85%;
+
+  > div {
+    @include button;
+    display: inline-block;
+  }
+}

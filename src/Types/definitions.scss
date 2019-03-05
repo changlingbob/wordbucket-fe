@@ -9,21 +9,28 @@ $solid-white: #fff;
 }
 
 @mixin scroll-y {
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; // sass-lint:disable-line no-vendor-prefixes
   overflow-y: scroll;
+}
+
+@mixin button {
+  @include body-style;
+  @include simple-border($solid-black);
+  background-color: darken($background-grey, 10%);
+  cursor: pointer;
 }
 
 @mixin background-image ($image) {
   background-image: $image;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: 80% 80%;
-  background-position: center;
 }
 
 @mixin body-style {
   border-radius: .25em;
-  margin: .2em;
   height: auto;
+  margin: .2em;
   min-height: 1.64em;
   padding: .2em;
 }

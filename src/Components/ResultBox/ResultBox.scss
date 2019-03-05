@@ -7,21 +7,16 @@
   margin: 1em;
 
   .results {
-    @include body-style;
     @include scroll-y;
-    @include simple-border($solid-black);
+    @include button;
     background: $solid-white;
-    cursor: text;
     flex-grow: 1;
     max-height: 5.5em;
     user-select: text;
   }
 
   .roller {
-    @include body-style;
-    @include simple-border($solid-black);
-    background: darken($background-grey, 10%);
-    cursor: pointer;
+    @include button;
     flex-grow: 0;
     flex-shrink: 0;
     padding: .2em .5em;
