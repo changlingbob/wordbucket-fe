@@ -1,6 +1,6 @@
 import React from "react";
 import Bucket, { WordEntry } from "wordbucket";
-import { removeWord, updateWord } from "../../State/bucketmanager";
+import { removeWord, updateWord } from "../../State/undomanager";
 import "./WordEdit.scss";
 
 interface IWordEditState {
@@ -8,13 +8,14 @@ interface IWordEditState {
   words: string;
 }
 
-class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry}, IWordEditState> {
+class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry, rerender: () => void}, IWordEditState> {
   private wordsDebounce: any;
   private weightDebounce: any;
   private word: WordEntry;
   private bucket: Bucket;
+  private rerender: () => void;
 
-  constructor(props: {bucket: Bucket, word: WordEntry}) {
+  constructor(props: {bucket: Bucket, word: WordEntry, rerender: () => void}) {
     super(props);
     this.state = {
       weight: props.word.weight,
@@ -22,6 +23,7 @@ class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry}, IWordE
     };
     this.word = props.word;
     this.bucket = props.bucket;
+    this.rerender = props.rerender;
 
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
@@ -67,6 +69,7 @@ class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry}, IWordE
 
   private removeWord() {
     removeWord(this.word, this.bucket);
+    this.rerender();
   }
 
   private doUpdate() {

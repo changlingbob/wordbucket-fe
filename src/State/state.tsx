@@ -2,23 +2,25 @@ import classNames from "classnames";
 import React, { ReactNode } from "react";
 import Bucket from "wordbucket";
 
-export interface INavigationState {
+export interface IApplicationState {
   path: string;
   bucket: Bucket;
   navigate(path: string): void;
   inPath(bucketName: string): boolean;
+  force(): void;
 }
 
-const NavigationContext = React.createContext({} as INavigationState);
+const StateContext = React.createContext({} as IApplicationState);
 
-export class NavigationProvider extends React.Component {
-  public state: INavigationState;
+export class StateProvider extends React.Component {
+  public state: IApplicationState;
 
   constructor(props: any) {
     super(props);
 
     this.state = {
       bucket: new Bucket(),
+      force: this.force,
       inPath: this.inPath,
       navigate: this.navigate,
       path: pathToBucket(window.location.pathname),
@@ -34,10 +36,14 @@ export class NavigationProvider extends React.Component {
 
   public render() {
     return (
-      <NavigationContext.Provider value={this.state}>
+      <StateContext.Provider value={this.state}>
         {this.props.children}
-      </NavigationContext.Provider>
+      </StateContext.Provider>
     );
+  }
+
+  public force = () => {
+    this.setState({});
   }
 
   public navigate = (bucket: string) => {
@@ -72,27 +78,27 @@ function bucketToPath(bucket: string): string {
 }
 
 export const NavLink = ({ ...props }) =>
-  <NavigationContext.Consumer>
+  <StateContext.Consumer>
     {
-      (navigation: INavigationState) =>
+      (State: IApplicationState) =>
       <a
         {...props}
         className={classNames(
           props.className,
-          {active: navigation.path === props.path},
+          {active: State.path === props.path},
         )}
         onClick={(e) => {
           props.onClick(e);
-          navigation.navigate(props.path);
+          State.navigate(props.path);
           e.preventDefault();
         }}
       />
     }
-  </NavigationContext.Consumer>;
+  </StateContext.Consumer>;
 
-export const BucketState = ({ render }: {render: (state: INavigationState) => ReactNode}) =>
-  <NavigationContext.Consumer>
+export const BucketState = ({ render }: {render: (state: IApplicationState) => ReactNode}) =>
+  <StateContext.Consumer>
     {
       (state) => render(state)
     }
-  </NavigationContext.Consumer>;
+  </StateContext.Consumer>;

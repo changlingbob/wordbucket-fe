@@ -2,15 +2,15 @@ import React from "react";
 import "./App.scss";
 import Frame from "./Chrome/Frame";
 import Content from "./Content/Content";
-import { NavigationProvider } from "./State/navigation";
+import { StateProvider } from "./State/state";
 
 function App() {
   return (
-    <NavigationProvider>
+    <StateProvider>
       <Frame>
         <Content />
       </Frame>
-    </NavigationProvider>
+    </StateProvider>
   );
 }
 

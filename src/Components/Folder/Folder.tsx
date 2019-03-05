@@ -1,20 +1,20 @@
 import classNames from "classnames";
 import React from "react";
-import { INavigationState, NavLink } from "../../State/navigation";
+import { IApplicationState, NavLink } from "../../State/state";
 import "./Folder.scss";
 
-interface IFolderState extends INavigationState {
+interface IFolderState extends IApplicationState {
   collapseChildren: boolean;
   collapsed: boolean;
 }
 
 interface IFolderProps {
-  state: INavigationState;
+  state: IApplicationState;
   collapsed: boolean;
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
-  private appState: INavigationState;
+  private appState: IApplicationState;
 
   constructor(props: IFolderProps) {
     super(props);

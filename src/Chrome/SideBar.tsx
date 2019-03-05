@@ -1,7 +1,7 @@
 import React from "react";
 import Bucket from "wordbucket";
 import Folder from "../Components/Folder/Folder";
-import { BucketState, INavigationState } from "../State/navigation";
+import { BucketState, IApplicationState } from "../State/state";
 
 interface ISideBarState {
   width: number;
@@ -50,7 +50,7 @@ class SideBar extends React.Component<any, ISideBarState> {
 
     return (
       <BucketState
-        render={(state: INavigationState) => {
+        render={(state: IApplicationState) => {
           const container = (
             <div
               className ="sidebar"

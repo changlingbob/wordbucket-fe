@@ -1,12 +1,12 @@
 import React from "react";
 import Bucket from "wordbucket";
-import { BucketState, INavigationState } from "../../State/navigation";
+import { BucketState, IApplicationState } from "../../State/state";
 import "./ResultBox.scss";
 
 class ResultBox extends React.Component {
   public render() {
     return (
-      <BucketState render={(state: INavigationState) => {
+      <BucketState render={(state: IApplicationState) => {
         return (
           <div className="result-container">
             <div className="results">{Bucket.generate(state.path)}</div>
