@@ -1,5 +1,6 @@
 import React from "react";
 import Bucket, { WordEntry } from "wordbucket";
+import { BucketState, IApplicationState } from "../../State/state";
 import { removeWord, updateWord } from "../../State/undomanager";
 import "./WordEdit.scss";
 
@@ -8,14 +9,20 @@ interface IWordEditState {
   words: string;
 }
 
-class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry, rerender: () => void}, IWordEditState> {
+interface IWordEditProps {
+  bucket: Bucket;
+  navigate: () => void;
+  word: WordEntry;
+}
+
+class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private wordsDebounce: any;
   private weightDebounce: any;
   private word: WordEntry;
   private bucket: Bucket;
-  private rerender: () => void;
+  private navigate: () => void;
 
-  constructor(props: {bucket: Bucket, word: WordEntry, rerender: () => void}) {
+  constructor(props: IWordEditProps) {
     super(props);
     this.state = {
       weight: props.word.weight,
@@ -23,7 +30,7 @@ class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry, rerende
     };
     this.word = props.word;
     this.bucket = props.bucket;
-    this.rerender = props.rerender;
+    this.navigate = props.navigate;
 
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
@@ -68,12 +75,11 @@ class WordEdit extends React.Component<{bucket: Bucket, word: WordEntry, rerende
   }
 
   private removeWord() {
-    removeWord(this.word, this.bucket);
-    this.rerender();
+    removeWord(this.word, this.bucket, this.navigate);
   }
 
   private doUpdate() {
-    updateWord(this.word, this.state.words, this.state.weight);
+    updateWord(this.word, this.state.words, this.state.weight, this.navigate);
   }
 }
 

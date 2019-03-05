@@ -1,50 +1,53 @@
 import Bucket, { WordEntry } from "wordbucket";
 
+interface IUndoableProps {
+  dispatch: () => void;
+  redo: () => void;
+  undo: () => void;
+}
+
 class Undoable {
   public undo: () => void;
   public redo: () => void;
-  public location: string;
+  public dispatch: () => void;
 
-  // tslint:disable-next-line:no-shadowed-variable
-  constructor({redo, undo}: {redo: () => void, undo: () => void}) {
-    this.undo = undo;
-    this.redo = redo;
-    this.location = document.location.pathname;
+  constructor(memo: IUndoableProps) {
+    this.undo = () => {memo.undo(); memo.dispatch(); };
+    this.redo = () => {memo.redo(); memo.dispatch(); };
+    this.dispatch = memo.dispatch;
+
+    undoQueue.push(this);
+    this.redo();
+    redoQueue = [];
   }
 }
 
 const undoQueue: any[] = [];
-const redoQueue: any[] = [];
+let redoQueue: any[] = [];
 
-export function updateWord(word: WordEntry, words: string, weight: number) {
+export function updateWord(word: WordEntry, words: string, weight: number, dispatch: () => void) {
   const currentState = {words: word.words, weight: word.weight};
-  const memo = new Undoable({
+  new Undoable({
+    dispatch,
     redo: () => word.update({words, weight}),
     undo: () => word.update(currentState),
   });
-
-  undoQueue.push(memo);
-  memo.redo();
 }
 
-export function removeWord(word: WordEntry, bucket: Bucket) {
-  const memo = new Undoable({
+export function removeWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+  new Undoable({
+    dispatch,
     redo: () => bucket.removeWords({word}),
     undo: () => bucket.putWords(word),
   });
-
-  undoQueue.push(memo);
-  memo.redo();
 }
 
-export function addWord(word: WordEntry, bucket: Bucket) {
-  const memo = new Undoable({
+export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+  new Undoable({
+    dispatch,
     redo: () => bucket.putWords(word),
     undo: () => bucket.removeWords({word}),
   });
-
-  undoQueue.push(memo);
-  memo.redo();
 }
 
 export function undo() {

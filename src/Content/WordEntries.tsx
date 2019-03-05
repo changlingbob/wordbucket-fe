@@ -13,10 +13,10 @@ const WordEntries = () => {
 
       for (const word of words) {
         wordEntries.push((<WordEdit
-          key={word.words}
+          key={`${word.weight}::${word.words}`}
           word={word}
           bucket={bucket}
-          rerender={state.force}
+          navigate={() => state.navigate(state.path)}
         />));
       }
 
