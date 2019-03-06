@@ -29,6 +29,10 @@
   &.collapsed {
     display: none;
   }
+
+  &.focused {
+    background-color: darken($background-grey, 20%);
+  }
 }
 
 .sidebar {

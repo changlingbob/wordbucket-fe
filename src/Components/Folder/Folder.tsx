@@ -1,29 +1,36 @@
 import classNames from "classnames";
 import React from "react";
+import Bucket from "wordbucket/out/Bucket";
 import { IApplicationState, NavLink } from "../../State/state";
 import "./Folder.scss";
 
-interface IFolderState extends IApplicationState {
+interface IFolderState extends IFolderProps {
   collapseChildren: boolean;
-  collapsed: boolean;
 }
 
 interface IFolderProps {
-  state: IApplicationState;
+  inPath: (bucketName: string) => boolean;
+  bucket: Bucket;
   collapsed: boolean;
+  path: string;
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
-  private appState: IApplicationState;
-
   constructor(props: IFolderProps) {
     super(props);
-    this.appState = props.state;
     this.state = {
-      collapseChildren: !props.state.inPath(props.state.bucket.getName()),
+      bucket: props.bucket,
+      collapseChildren: !props.inPath(props.bucket.getName()),
       collapsed: props.collapsed,
-      ...props.state,
+      inPath: props.inPath,
+      path: props.path,
     };
+  }
+
+  public componentWillReceiveProps(props: IFolderProps) {
+    this.setState({
+      ...props,
+    });
   }
 
   public render() {
@@ -31,8 +38,10 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
     const children = [];
     for (const child of bucket.getChildren()) {
       children.push(<Folder
-        state={{...this.appState, bucket: child}}
+        bucket={child}
         collapsed={this.state.collapseChildren}
+        inPath={this.state.inPath}
+        path={this.state.path}
         key={child.getName()}
       />);
     }
@@ -49,6 +58,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           className={classNames(
             "folder",
             {collapsed: this.props.collapsed},
+            {focused: bucket.getName() === this.state.path},
           )}
         >
           {this.state.bucket.getChildren().length > 0 ? <div

@@ -8,13 +8,16 @@ class ResultBox extends React.Component {
     return (
       <BucketState render={(state: IApplicationState) => {
         return (
-          <div className="result-container">
-            <div className="results">{Bucket.generate(state.path)}</div>
-            <div
-              className="roller"
-              onClick={(ev) => this.forceUpdate()}
-            >Re-roll</div>
-          </div>
+          <>
+            <div className="result-title">{state.path}</div>
+            <div className="result-container">
+              <div className="results">{Bucket.generate(state.path)}</div>
+              <div
+                className="roller"
+                onClick={(ev) => this.forceUpdate()}
+              >Re-roll</div>
+            </div>
+          </>
         );
       }}/>
     );

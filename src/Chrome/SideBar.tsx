@@ -59,7 +59,9 @@ class SideBar extends React.Component<any, ISideBarState> {
               style={{width: self.state.width}}
             >
               <Folder
-                state={state}
+                bucket={state.bucket}
+                inPath={state.inPath}
+                path={state.path}
                 collapsed={false}
               />
             </div>
