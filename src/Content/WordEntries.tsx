@@ -17,8 +17,15 @@ const WordEntries = () => {
           word={word}
           bucket={bucket}
           navigate={() => state.navigate(state.path)}
-        />));
-      }
+          />));
+        }
+
+      wordEntries.push((<WordEdit
+          key={`${Math.random()}`}
+          bucket={bucket}
+          navigate={() => state.navigate(state.path)}
+          create={true}
+      />));
 
       return (
         <div className="words">

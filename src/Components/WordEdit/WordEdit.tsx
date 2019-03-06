@@ -1,10 +1,11 @@
+import classNames from "classnames";
 import React from "react";
 import Bucket, { WordEntry } from "wordbucket";
-import { BucketState, IApplicationState } from "../../State/state";
-import { removeWord, updateWord } from "../../State/undomanager";
+import { addWord, removeWord, updateWord } from "../../State/undomanager";
 import "./WordEdit.scss";
 
 interface IWordEditState {
+  create: boolean;
   weight: number;
   words: string;
 }
@@ -12,21 +13,23 @@ interface IWordEditState {
 interface IWordEditProps {
   bucket: Bucket;
   navigate: () => void;
-  word: WordEntry;
+  create?: boolean;
+  word?: WordEntry;
 }
 
 class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private wordsDebounce: any;
   private weightDebounce: any;
-  private word: WordEntry;
+  private word: WordEntry|undefined;
   private bucket: Bucket;
   private navigate: () => void;
 
   constructor(props: IWordEditProps) {
     super(props);
     this.state = {
-      weight: props.word.weight,
-      words: props.word.words,
+      create: props.create || false,
+      weight: props.word ? props.word.weight : 0,
+      words: props.word ? props.word.words : "",
     };
     this.word = props.word;
     this.bucket = props.bucket;
@@ -34,13 +37,16 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
 
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
-    this.removeWord = this.removeWord.bind(this);
+    this.updateWord = this.updateWord.bind(this);
   }
 
   public render() {
     return(
       <div
-        className="wordedit"
+        className={classNames(
+          "wordedit",
+          {create: this.state.create},
+        )}
       >
         <input
           className="weight"
@@ -53,8 +59,8 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
           onChange={this.wordChange}
         />
         <div
-          className="delete"
-          onClick={this.removeWord}
+          className="button"
+          onClick={this.updateWord}
         />
       </div>
     );
@@ -74,12 +80,27 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     this.wordsDebounce = setTimeout(doUpdate, 300);
   }
 
-  private removeWord() {
-    removeWord(this.word, this.bucket, this.navigate);
+  private updateWord() {
+    if (this.state.create) {
+      this.setState({create: false});
+    } else if (this.word) {
+      removeWord(this.word, this.bucket, this.navigate);
+    } else {
+      this.setState({
+        create: true,
+        weight: 0,
+        words: "",
+      });
+    }
   }
 
   private doUpdate() {
-    updateWord(this.word, this.state.words, this.state.weight, this.navigate);
+    if (!this.word && this.state.words && this.state.weight) {
+      this.word = new WordEntry(this.state.words, +this.state.weight, this.bucket);
+      addWord(this.word, this.bucket, this.navigate);
+    } else if (this.word) {
+      updateWord(this.word, this.state.words, +this.state.weight, this.navigate);
+    }
   }
 }
 

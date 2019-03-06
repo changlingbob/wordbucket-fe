@@ -18,7 +18,7 @@
     flex: 1;
   }
 
-  .delete {
+  .button {
     @include background-image(url('../../Images/delete-page.svg'));
     @include button;
     flex: 0 2em;
@@ -26,5 +26,17 @@
     flex-shrink: 0;
     padding: .2em .5em;
     width: 2em;
+  }
+
+  &.create {
+    .weight,
+    .words {
+      visibility: hidden;
+    }
+
+    .button {
+      background-color: $solid-white;
+      background-image: url('../../Images/add-new-document.svg');
+    }
   }
 }
