@@ -16,6 +16,7 @@ interface IFolderProps {
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
+
   constructor(props: IFolderProps) {
     super(props);
     this.state = {
@@ -78,6 +79,10 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           >
             {bucket.getName()}
           </NavLink>
+          <div
+            className="create"
+            onClick={this.create}
+          />
           <div className="children">
             {children}
           </div>
@@ -85,6 +90,9 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
       );
     }
   }
-}
+
+  private create() {
+    return;
+  }}
 
 export default Folder;

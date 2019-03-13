@@ -1,14 +1,10 @@
 @import '../../Types/definitions';
 
 .folder {
+  background-color: $background-grey;
   border-left: $folder-border;
   border-top: $folder-border;
   padding-left: 1em;
-
-  .title {
-    cursor: pointer;
-    display: inline-block;
-  }
 
   .toggle {
     @include simple-border($solid-black);
@@ -24,6 +20,29 @@
     text-align: center;
     top: -.1rem;
     width: .6rem;
+  }
+
+  .title {
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: calc(100% - 1.8em);
+  }
+
+  .create {
+    @include background-image(url('../../Images/add-new-document.svg'));
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    height: 1em;
+    vertical-align: middle;
+    width: 1em;
+
+    &:hover {
+      background-color: $button-highlight;
+    }
   }
 
   &.collapsed {
