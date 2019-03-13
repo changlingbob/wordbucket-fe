@@ -12,6 +12,7 @@ interface IFolderProps {
   inPath: (bucketName: string) => boolean;
   bucket: Bucket;
   collapsed: boolean;
+  create: boolean;
   path: string;
 }
 
@@ -20,11 +21,8 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
   constructor(props: IFolderProps) {
     super(props);
     this.state = {
-      bucket: props.bucket,
+      ...props,
       collapseChildren: !props.inPath(props.bucket.getName()),
-      collapsed: props.collapsed,
-      inPath: props.inPath,
-      path: props.path,
     };
   }
 
@@ -44,6 +42,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
         inPath={this.state.inPath}
         path={this.state.path}
         key={child.getName()}
+        create={false}
       />);
     }
 
@@ -81,7 +80,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           </NavLink>
           <div
             className="create"
-            onClick={this.create}
+            onClick={this.newBucket}
           />
           <div className="children">
             {children}
@@ -91,7 +90,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
     }
   }
 
-  private create() {
+  private newBucket() {
     return;
   }}
 
