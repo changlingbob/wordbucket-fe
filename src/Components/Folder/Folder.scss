@@ -5,21 +5,23 @@
   border-left: $folder-border;
   border-top: $folder-border;
   padding-left: 1em;
+  position: relative;
 
   .toggle {
     @include simple-border($solid-black);
     background: $foldable-white;
+    box-sizing: content-box;
     cursor: pointer;
     display: inline-block;
     font-size: .6em;
-    height: .6rem;
+    height: .5rem;
     left: .2rem;
     line-height: .6rem;
     margin: 0 .4rem 0 -1rem;
     position: relative;
     text-align: center;
     top: -.1rem;
-    width: .6rem;
+    width: .5rem;
   }
 
   .title {
@@ -37,6 +39,9 @@
     cursor: pointer;
     display: inline-block;
     height: 1em;
+    position: absolute;
+    right: .8rem;
+    top: .1rem;
     vertical-align: middle;
     width: 1em;
 
