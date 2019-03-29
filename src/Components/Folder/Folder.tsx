@@ -10,10 +10,11 @@ interface IFolderState extends IFolderProps {
 
 interface IFolderProps {
   inPath: (bucketName: string) => boolean;
-  bucket?: Bucket|undefined;
+  bucket?: Bucket;
   collapsed: boolean;
   create: boolean;
   path: string;
+  parentName?: string;
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
@@ -24,10 +25,6 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
       ...props,
       collapseChildren: !!props.bucket && !props.inPath(props.bucket.getName()),
     };
-  }
-
-  public shouldComponentUpdate(nextProps: IFolderProps, nextState: IFolderState) {
-    return false;
   }
 
   public componentWillReceiveProps(props: IFolderProps) {
@@ -55,8 +52,9 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           collapsed={this.state.collapseChildren}
           inPath={this.state.inPath}
           path={this.state.path}
-          key="test"
+          key="create"
           create={false}
+          parentName={bucket.getName()}
         />);
       }
 
@@ -106,8 +104,25 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
       }
     } else {
       return (
-        <></>
-      );
+        <div
+            className={classNames(
+              "folder",
+              "new-bucket",
+            )}
+          >
+          <span>{this.state.parentName}.</span>
+            <input
+              className="title"
+              onClick={() => {
+                // tslint:disable-next-line no-console
+                console.log("click");
+              }}
+            />
+            <div
+              className="create confirm"
+              // onClick={this.newBucket}
+            />
+          </div>      );
     }
   }
 

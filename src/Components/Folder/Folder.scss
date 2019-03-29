@@ -27,6 +27,8 @@
   .title {
     cursor: pointer;
     display: inline-block;
+    height: 1.3em;
+    line-height: 1.3em;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
@@ -56,6 +58,15 @@
 
   &.focused {
     background-color: darken($background-grey, 20%);
+  }
+
+  &.new-bucket {
+    display: flex;
+
+    span {
+      height: 1.3em;
+      line-height: 1.3em;
+    }
   }
 }
 
