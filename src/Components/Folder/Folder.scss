@@ -47,6 +47,10 @@
     vertical-align: middle;
     width: 1em;
 
+    &.confirm {
+      background-image: url('../../Images/add.svg');
+    }
+
     &:hover {
       background-color: $button-highlight;
     }

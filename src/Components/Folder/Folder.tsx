@@ -116,21 +116,18 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           <span>{this.state.parentName}.</span>
             <input
               className="title"
-              onClick={() => {
-                // tslint:disable-next-line no-console
-                console.log("click");
-              }}
             />
-            <div
-              className="create confirm"
-              // onClick={this.newBucket}
-            />
-          </div>      );
+          <div
+            className="create confirm"
+            onClick={this.newBucket}
+          />
+        </div>);
     }
   }
 
-  private newBucket() {
+  private newBucket(event: any) {
     return;
-  }}
+  }
+}
 
 export default Folder;
