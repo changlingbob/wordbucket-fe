@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 import Bucket from "wordbucket/out/Bucket";
-import { IApplicationState, NavLink } from "../../State/state";
+import { IApplicationState, NavLink, StateProvider } from "../../State/state";
 import "./Folder.scss";
 
 interface IFolderState extends IFolderProps {
@@ -28,9 +28,12 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
   }
 
   public componentWillReceiveProps(props: IFolderProps) {
-    this.setState({
-      ...props,
-    });
+    if (props.collapsed !== this.state.collapsed ||
+      props.path !== this.state.path) {
+      this.setState({
+        ...props,
+      });
+    }
   }
 
   public render() {
