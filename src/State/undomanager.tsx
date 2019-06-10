@@ -6,7 +6,28 @@ interface IUndoableProps {
   undo: () => void;
 }
 
-class Undoable {
+export class Undoable {
+  public static undo = () => {
+    if (Undoable.undoQueue.length > 0) {
+      const memo = Undoable.undoQueue.pop();
+      if (memo) {
+        memo.undo();
+        Undoable.redoQueue.push(memo);
+      }
+    }
+  }
+
+  public static redo = () => {
+    if (Undoable.redoQueue.length > 0) {
+      const memo = Undoable.redoQueue.pop();
+      if (memo) {
+        memo.redo();
+        Undoable.undoQueue.push(memo);
+      }
+    }
+  }
+  private static undoQueue: Undoable[] = [];
+  private static redoQueue: Undoable[] = [];
   public undo: () => void;
   public redo: () => void;
   public dispatch: () => void;
@@ -16,14 +37,12 @@ class Undoable {
     this.redo = () => {memo.redo(); memo.dispatch(); };
     this.dispatch = memo.dispatch;
 
-    undoQueue.push(this);
+    Undoable.undoQueue.push(this);
     this.redo();
-    redoQueue = [];
+    Undoable.redoQueue = [];
   }
-}
 
-const undoQueue: any[] = [];
-let redoQueue: any[] = [];
+}
 
 export function updateWord(word: WordEntry, words: string, weight: number, dispatch: () => void) {
   const currentState = {words: word.words, weight: word.weight};
@@ -50,18 +69,23 @@ export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
   });
 }
 
-export function undo() {
-  if (undoQueue.length > 0) {
-    const memo = undoQueue.pop();
-    memo.undo();
-    redoQueue.push(memo);
-  }
+export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
+  new Undoable({
+    dispatch,
+    redo: () => {
+      new Bucket(bucketName, parent);
+    },
+    undo: () => {
+      parent.removeChild(bucketName);
+    },
+  });
 }
 
-export function redo() {
-  if (redoQueue.length > 0) {
-    const memo = redoQueue.pop();
-    memo.redo();
-    undoQueue.push(memo);
-  }
+export function removeBucket(bucket: Bucket, parent: Bucket, dispatch: () => void) {
+  const bucketBackup = bucket;
+  new Undoable({
+    dispatch,
+    redo: () => parent.removeChild(bucket),
+    undo: () => parent.addChild(bucketBackup),
+  });
 }

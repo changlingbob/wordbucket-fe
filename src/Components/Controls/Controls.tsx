@@ -1,5 +1,5 @@
 import React from "react";
-import { redo, undo } from "../../State/undomanager";
+import { Undoable } from "../../State/undomanager";
 import "./Controls.scss";
 
 const Controls = () => {
@@ -7,11 +7,11 @@ const Controls = () => {
     <div className="controls">
       <div
         className="undo"
-        onClick={undo}
+        onClick={Undoable.undo}
         >Undo</div>
       <div
         className="redo"
-        onClick={redo}
+        onClick={Undoable.redo}
       >Redo</div>
       <div>
         Import

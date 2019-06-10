@@ -1,7 +1,8 @@
 import classNames from "classnames";
 import React from "react";
 import Bucket from "wordbucket/out/Bucket";
-import { IApplicationState, NavLink, StateProvider } from "../../State/state";
+import { NavLink } from "../../State/state";
+import { addBucket } from "../../State/undomanager";
 import "./Folder.scss";
 
 interface IFolderState extends IFolderProps {
@@ -18,6 +19,7 @@ interface IFolderProps {
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
+  private inputRef: any;
 
   constructor(props: IFolderProps) {
     super(props);
@@ -25,6 +27,9 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
       ...props,
       collapseChildren: !!props.bucket && !props.inPath(props.bucket.getName()),
     };
+
+    this.inputRef = React.createRef();
+    this.newBucket = this.newBucket.bind(this);
   }
 
   public componentWillReceiveProps(props: IFolderProps) {
@@ -115,6 +120,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           >
           <span>{this.state.parentName}.</span>
             <input
+              ref={this.inputRef}
               className="title"
             />
           <div
@@ -126,7 +132,12 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
   }
 
   private newBucket(event: any) {
-    return;
+    if (this.inputRef.current) {
+      const parentName = this.state.parentName || "";
+      const newName = (parentName ? `${parentName}.` : "") + this.inputRef.current.value;
+
+      addBucket(newName, Bucket.get(parentName), () => {});
+    }
   }
 }
 
