@@ -7,6 +7,11 @@ class ResultBox extends React.Component {
   public render() {
     return (
       <BucketState render={(state: IApplicationState) => {
+        if (state.path === "") {
+          return <div className="result-title">
+            Select a table to start.
+          </div>;
+        }
         return (
           <>
             <div className="result-title">{state.path}</div>

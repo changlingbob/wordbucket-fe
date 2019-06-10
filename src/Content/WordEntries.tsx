@@ -7,6 +7,10 @@ import "./Content.scss";
 const WordEntries = () => {
   return (
     <BucketState render={(state: IApplicationState) => {
+      if (state.path === "") {
+        return null;
+      }
+
       const wordEntries: JSX.Element[] = [];
       const bucket = Bucket.get(state.path);
       const words: WordEntry[] = bucket.getWords();
