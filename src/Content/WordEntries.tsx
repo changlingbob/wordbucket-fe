@@ -7,35 +7,37 @@ import "./Content.scss";
 const WordEntries = () => {
   return (
     <BucketState render={(state: IApplicationState) => {
+      const bucket = Bucket.get(state.path);
       if (state.path === "") {
         return null;
-      }
+      } else if (!bucket) {
+        state.navigate(state.path.slice(0, state.path.lastIndexOf(".")));
+      } else {
+        const wordEntries: JSX.Element[] = [];
+        const words: WordEntry[] = bucket.getWords();
 
-      const wordEntries: JSX.Element[] = [];
-      const bucket = Bucket.get(state.path);
-      const words: WordEntry[] = bucket.getWords();
+        for (const word of words) {
+          wordEntries.push((<WordEdit
+            key={`${word.weight}::${word.words}`}
+            word={word}
+            bucket={bucket}
+            navigate={() => state.navigate(state.path)}
+            />));
+          }
 
-      for (const word of words) {
         wordEntries.push((<WordEdit
-          key={`${word.weight}::${word.words}`}
-          word={word}
-          bucket={bucket}
-          navigate={() => state.navigate(state.path)}
-          />));
-        }
+            key={`${Math.random()}`}
+            bucket={bucket}
+            navigate={() => state.navigate(state.path)}
+            create={true}
+        />));
 
-      wordEntries.push((<WordEdit
-          key={`${Math.random()}`}
-          bucket={bucket}
-          navigate={() => state.navigate(state.path)}
-          create={true}
-      />));
-
-      return (
-        <div className="words">
-          {wordEntries}
-        </div>
-      );
+        return (
+          <div className="words">
+            {wordEntries}
+          </div>
+        );
+      }
     }} />
   );
 };
