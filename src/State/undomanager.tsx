@@ -70,19 +70,18 @@ export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
 }
 
 export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
+  const freshBucket = new Bucket(bucketName, parent);
+
   new Undoable({
     dispatch,
-    redo: () => {
-      new Bucket(bucketName, parent);
-    },
-    undo: () => {
-      parent.removeChild(bucketName);
-    },
+    redo: () => parent.addChild(freshBucket),
+    undo: () => parent.removeChild(bucketName),
   });
 }
 
 export function removeBucket(bucket: Bucket, parent: Bucket, dispatch: () => void) {
   const bucketBackup = bucket;
+
   new Undoable({
     dispatch,
     redo: () => parent.removeChild(bucket),
