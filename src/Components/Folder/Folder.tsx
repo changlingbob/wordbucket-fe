@@ -15,6 +15,7 @@ interface IFolderProps {
   collapsed: boolean;
   create: boolean;
   path: string;
+  parent?: Folder;
   parentName?: string;
 }
 
@@ -62,6 +63,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           path={this.state.path}
           key="create"
           create={false}
+          parent={this}
           parentName={bucket.getName()}
         />);
       }
@@ -93,6 +95,8 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
               className="title"
               path={bucket.getName()}
               onClick={() => {
+                // tslint:disable-next-line:no-console
+                console.log(this.state);
                 this.setState({collapseChildren: false});
               }}
             >
@@ -136,7 +140,11 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
       const parentName = this.state.parentName || "";
       const newName = (parentName ? `${parentName}.` : "") + this.inputRef.current.value;
 
-      addBucket(newName, Bucket.get(parentName), () => {});
+      addBucket(newName, Bucket.get(parentName), () => {
+        if (this.state.parent) {
+          this.state.parent.setState({create: false});
+        }
+      });
     }
   }
 }
