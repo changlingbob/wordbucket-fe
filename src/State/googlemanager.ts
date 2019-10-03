@@ -38,14 +38,14 @@ class GoogleManager {
   }
 
   private initGapi() {
-    console.log("resolved");
+    const self = this;
     gapi.client.init({
-      clientId: "404024621165-o3bapilsuiakriakp2g9mv9u20qdbiil.apps.googleusercontent.com",
+      clientId: "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com",
       discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
       scope: "https://www.googleapis.com/auth/drive.appdata",
     }).then(() => {
-      this.GoogleAuth = gapi.auth2.getAuthInstance();
-      this.GoogleAuth.isSignedIn.listen(this.updateSigninStatus);
+      self.GoogleAuth = gapi.auth2.getAuthInstance();
+      self.GoogleAuth.isSignedIn.listen(self.updateSigninStatus);
     });
   }
 
