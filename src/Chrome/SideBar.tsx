@@ -1,5 +1,4 @@
 import React from "react";
-import Bucket from "wordbucket";
 import Folder from "../Components/Folder/Folder";
 import { BucketState, IApplicationState } from "../State/state";
 

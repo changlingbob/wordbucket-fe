@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./chrome.scss";
 import Footer from "./Footer";
 import Header from "./Header";
