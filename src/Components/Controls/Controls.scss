@@ -2,9 +2,16 @@
 
 .controls {
   font-size: 85%;
+  display: flex;
+  flex-flow: column;
 
-  > div {
+  .g-signin2 {
+    align-self: flex-end;
+  }
+
+  .app > div {
     @include button;
     display: inline-block;
+    margin-top: 6px;
   }
 }

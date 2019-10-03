@@ -1,25 +1,28 @@
 import React from "react";
 import { Undoable } from "../../State/undomanager";
 import "./Controls.scss";
-import Login from "./Login";
 
 const Controls = () => {
   return (
     <div className="controls">
-      <Login />
-      <div
-        className="undo"
-        onClick={Undoable.undo}
-        >Undo</div>
-      <div
-        className="redo"
-        onClick={Undoable.redo}
-      >Redo</div>
-      <div>
-        Import
-      </div>
-      <div>
-        Export
+        <div className="g-signin2">
+          Login
+        </div>
+      <div className="app">
+        <div
+          className="undo"
+          onClick={Undoable.undo}
+          >Undo</div>
+        <div
+          className="redo"
+          onClick={Undoable.redo}
+        >Redo</div>
+        <div>
+          Import
+        </div>
+        <div>
+          Export
+        </div>
       </div>
     </div>
   );

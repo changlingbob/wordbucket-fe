@@ -1,21 +1,24 @@
 class GoogleManager {
-  public GoogleAuth?: gapi.auth2.GoogleAuth;
-  // private readonly platformUrl: string = "https://apis.google.com/js/platform.js";
-  private readonly gapiUrl: string = "https://apis.google.com/js/platform.js";
+  private GoogleAuth?: gapi.auth2.GoogleAuth;
 
   constructor() {
     const self = this;
 
-    const metaTag = document.createElement("meta");
-    metaTag.name = "google-signin-client_id";
-    metaTag.content = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
-    document.head.appendChild(metaTag);
+    const clientIdTag = document.createElement("meta");
+    clientIdTag.name = "google-signin-client_id";
+    clientIdTag.content = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
+    document.head.appendChild(clientIdTag);
+
+    const scopeTag = document.createElement("meta");
+    scopeTag.name = "google-signin-scope";
+    scopeTag.content = "https://www.googleapis.com/auth/drive.appdata";
+    document.head.appendChild(scopeTag);
 
     const apiElement = document.createElement("script");
-    apiElement.src = this.gapiUrl;
+    apiElement.src = "https://apis.google.com/js/platform.js";
     apiElement.type = "text/javascript";
     apiElement.charset = "utf-8";
-    document.body.appendChild(apiElement);
+    document.head.appendChild(apiElement);
     apiElement.onload = () => {
       gapi.load("auth2", initGapi);
     };
@@ -31,9 +34,11 @@ class GoogleManager {
   }
 
   public save(data: string) {
+    if (this.GoogleAuth) {
+    }
   }
 
-  public load(data: string) {
+  public load() {
   }
 }
 
