@@ -22,7 +22,7 @@ export class StateProvider extends React.Component {
 
     this.state = {
       bucket: new Bucket(),
-      googleManager: new GoogleManager("404024621165-o3bapilsuiakriakp2g9mv9u20qdbiil.apps.googleusercontent.com"),
+      googleManager: new GoogleManager(),
       inPath: this.inPath,
       load: this.load,
       navigate: this.navigate,
