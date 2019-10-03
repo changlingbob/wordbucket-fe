@@ -36,7 +36,7 @@
   }
 
   .create {
-    @include background-image(url('../../Images/add-new-document.svg'));
+    @include background-image(url('../Images/add-new-document.svg'));
     border-radius: 5px;
     cursor: pointer;
     display: inline-block;

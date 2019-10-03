@@ -1,10 +1,12 @@
 import classNames from "classnames";
 import React, { ReactNode } from "react";
 import Bucket from "wordbucket";
+import GoogleManager from "./googlemanager";
 
 export interface IApplicationState {
-  path: string;
   bucket: Bucket;
+  path: string;
+  googleManager: GoogleManager;
   inPath(bucketName: string): boolean;
   load(bucketString: string): void;
   navigate(path: string): void;
@@ -20,6 +22,7 @@ export class StateProvider extends React.Component {
 
     this.state = {
       bucket: new Bucket(),
+      googleManager: new GoogleManager("404024621165-o3bapilsuiakriakp2g9mv9u20qdbiil.apps.googleusercontent.com"),
       inPath: this.inPath,
       load: this.load,
       navigate: this.navigate,

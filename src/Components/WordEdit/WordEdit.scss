@@ -19,7 +19,7 @@
   }
 
   .button {
-    @include background-image(url('../../Images/delete-page.svg'));
+    @include background-image(url('../Images/delete-page.svg'));
     @include button;
     flex: 0 2em;
     flex-grow: 0;
