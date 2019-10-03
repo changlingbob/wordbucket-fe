@@ -1,6 +1,6 @@
 class GoogleManager {
   public GoogleAuth?: gapi.auth2.GoogleAuth;
-  private readonly gapiUrl: string = "https://apis.google.com/js/api.js";
+  private readonly gapiUrl: string = "https://apis.google.com/js/platform.js";
   private authPromise: Promise<any>;
   private authResolve: () => void;
 
@@ -8,6 +8,11 @@ class GoogleManager {
     // tslint:disable-next-line:no-empty
     this.authResolve = () => {};
     const self = this;
+
+    const metaTag = document.createElement("meta");
+    metaTag.name = "google-signin-client_id";
+    metaTag.content = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
+    document.head.appendChild(metaTag);
 
     const apiElement = document.createElement("script");
     apiElement.src = this.gapiUrl;
@@ -19,16 +24,16 @@ class GoogleManager {
     };
 
     function initGapi() {
-      gapi.client.init({
-        clientId: "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com",
-        discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
-        scope: "https://www.googleapis.com/auth/drive.appdata",
-      }).then(() => {
-        self.GoogleAuth = gapi.auth2.getAuthInstance();
-        self.GoogleAuth.isSignedIn.listen(self.updateSigninStatus);
-      }, () => {
-        alert("you need to done do cookies");
-      });
+      // gapi.client.init({
+      //   clientId: "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com",
+      //   discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"],
+      //   scope: "https://www.googleapis.com/auth/drive.appdata",
+      // }).then(() => {
+      //   self.GoogleAuth = gapi.auth2.getAuthInstance();
+      //   self.GoogleAuth.isSignedIn.listen(self.updateSigninStatus);
+      // }, () => {
+      //   alert("you need to done do cookies");
+      // });
     }
 
     this.authPromise = new Promise((resolve, reject) => {

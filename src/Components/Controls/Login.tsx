@@ -6,7 +6,8 @@ const Login: React.StatelessComponent = () => {
     <BucketState render={(state: IApplicationState) => {
       return (
         <div
-          onClick={state.googleManager.signIn}
+          className="g-signin2"
+          data-onsuccess="alert"
         >
           Login
         </div>
