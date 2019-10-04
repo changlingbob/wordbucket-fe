@@ -95,8 +95,6 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
               className="title"
               path={bucket.getName()}
               onClick={() => {
-                // tslint:disable-next-line:no-console
-                console.log(this.state);
                 this.setState({collapseChildren: false});
               }}
             >
