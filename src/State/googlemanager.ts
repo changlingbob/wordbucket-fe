@@ -51,48 +51,38 @@ class GoogleManager {
 
   public load = async () => {
     if (this.fileId) {
-      console.log("got an id now");
       gapi.client.drive.files.get({
         alt: "media",
         fileId: this.fileId,
       }).then((res) => {
-        console.log("actual file:");
-        console.log(res);
+        console.log(`got file ${res}`);
       });
     } else {
-      console.log("retry");
       this.getFileId().then(this.load);
     }
   }
 
   private create = async () => {
-    console.log("create pls");
     return gapi.client.drive.files.create({
       fields: "id",
       resource: { name: this.fileName, parents: ["appDataFolder"] },
     }).then((response) => {
-      console.log("created!");
-      console.log(response);
       if (response
         && response.result
         && response.result.id
       ) {
         this.fileId = response.result.id;
-        console.log(`made ${this.fileId}`);
         return this.fileId;
       }
     });
   }
 
   private getFileId = async () => {
-    console.log("read pls");
     return gapi.client.drive.files.list({
       fields: "files(id)",
       q: `name="${this.fileName}"`,
       spaces: "appDataFolder",
     }).then((response) => {
-      console.log("got id");
-      console.log(response);
       if (response
         && response.result
         && response.result.files
@@ -100,10 +90,8 @@ class GoogleManager {
         && response.result.files[0].id
       ) {
         this.fileId = response.result.files[0].id;
-        console.log(`set id: ${this.fileId}`);
         return this.fileId;
       } else {
-        console.log("gotta make one");
         return this.create();
       }
     });
