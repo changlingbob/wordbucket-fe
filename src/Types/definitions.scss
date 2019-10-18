@@ -33,10 +33,23 @@ $button-highlight: $solid-white;
 }
 
 @mixin body-style {
-  border-radius: .25em;
+  @include nice-border;
   height: auto;
   margin: .2em;
   min-height: 1.64em;
+}
+
+@mixin centre-float {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+@mixin nice-border {
+  border-radius: .25em;
   padding: .2em;
 }
 

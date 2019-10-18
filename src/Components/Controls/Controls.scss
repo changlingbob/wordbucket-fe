@@ -1,15 +1,15 @@
 @import '../../Types/definitions';
 
 .controls {
-  font-size: 85%;
   display: flex;
   flex-flow: column;
+  font-size: 85%;
 
   .g-signin2 {
     align-self: flex-end;
   }
 
-  .app > div {
+  .app .button {
     @include button;
     display: inline-block;
     margin-top: 6px;

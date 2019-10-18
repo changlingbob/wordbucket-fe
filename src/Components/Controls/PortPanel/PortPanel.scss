@@ -1,0 +1,23 @@
+@import '../../../Types/definitions';
+
+.floating-panel {
+  @include simple-border($solid-black);
+  @include nice-border;
+  @include centre-float;
+  background-color: darken($background-grey, 5%);
+
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  width: 60%;
+
+  textarea {
+    @include nice-border;
+    height: 80%;
+    margin: 4px;
+  }
+
+  button {
+    width: 300px;
+  }
+}
