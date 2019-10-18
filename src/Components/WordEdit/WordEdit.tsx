@@ -70,14 +70,14 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({weight: event.target.value});
     clearInterval(this.weightDebounce);
-    this.weightDebounce = setTimeout(doUpdate, 300);
+    this.weightDebounce = setTimeout(doUpdate, 800);
   }
 
   private wordChange(event: any) {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({words: event.target.value});
     clearInterval(this.wordsDebounce);
-    this.wordsDebounce = setTimeout(doUpdate, 300);
+    this.wordsDebounce = setTimeout(doUpdate, 800);
   }
 
   private updateWord() {
