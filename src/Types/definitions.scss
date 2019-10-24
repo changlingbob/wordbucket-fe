@@ -33,7 +33,7 @@ $button-highlight: $solid-white;
 }
 
 @mixin body-style {
-  @include nice-border;
+  @include nice-edges;
   height: auto;
   margin: .2em;
   min-height: 1.64em;
@@ -48,7 +48,7 @@ $button-highlight: $solid-white;
   top: 0;
 }
 
-@mixin nice-border {
+@mixin nice-edges {
   border-radius: .25em;
   padding: .2em;
 }
