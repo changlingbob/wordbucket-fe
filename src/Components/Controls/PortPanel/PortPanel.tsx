@@ -16,7 +16,7 @@ const Panel = (props: IPanelProps) => {
   return (
     <div className="floating-panel">
       <textarea
-        ref={inputRef}
+        ref={(el) => inputRef = el}
       >
         {props.content}
       </textarea>
