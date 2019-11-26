@@ -1,7 +1,8 @@
-save out json +import
+x save out json +import
 load in json +import
 merge logic +import
 load from gdrive +import
 update starting data
 logout option
 feature documentation
+better UX for adding a new root bucket
