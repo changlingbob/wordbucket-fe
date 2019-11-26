@@ -3,6 +3,7 @@ import Bucket from "wordbucket";
 import { BucketState, IApplicationState } from "../../State/state";
 import "./ResultBox.scss";
 
+// Classified so that we can do a forceUpdate.
 class ResultBox extends React.Component {
   public render() {
     return (
