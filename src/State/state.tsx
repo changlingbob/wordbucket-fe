@@ -2,6 +2,7 @@ import classNames from "classnames";
 import React, { ReactNode } from "react";
 import Bucket from "wordbucket";
 import GoogleManager from "./googlemanager";
+import { Undoable } from "./undomanager";
 
 export interface IApplicationState {
   bucket: Bucket;
@@ -28,6 +29,8 @@ export class StateProvider extends React.Component {
       navigate: this.navigate,
       path: pathnameToBucket(window.location.pathname),
     };
+
+    Undoable.setRoot(this.state.bucket);
 
     setTimeout(() => {
       console.log("loading");

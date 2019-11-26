@@ -7,6 +7,11 @@ interface IUndoableProps {
 }
 
 export class Undoable {
+  public static rootBucket: Bucket;
+  public static setRoot = (root: Bucket) => {
+    Undoable.rootBucket = root;
+  }
+
   public static undo = () => {
     if (Undoable.undoQueue.length > 0) {
       const memo = Undoable.undoQueue.pop();
@@ -41,7 +46,6 @@ export class Undoable {
     this.redo();
     Undoable.redoQueue = [];
   }
-
 }
 
 export function updateWord(word: WordEntry, words: string, weight: number, dispatch: () => void) {
@@ -70,12 +74,16 @@ export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
 }
 
 export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
-  const freshBucket = new Bucket(bucketName, parent);
+  const parentBucket = parent || Undoable.rootBucket;
+  const freshBucket = new Bucket(bucketName, parentBucket);
 
   new Undoable({
     dispatch,
-    redo: () => parent.addChild(freshBucket),
-    undo: () => parent.removeChild(bucketName),
+    redo: () => parentBucket.addChild(freshBucket),
+    undo: () => {
+      console.log("remove");
+      parentBucket.removeChild(bucketName);
+    },
   });
 }
 

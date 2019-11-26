@@ -1,10 +1,14 @@
 @import '../../Types/definitions';
 
 .folder {
+  padding-left: 1em;
+}
+
+.folder,
+.root {
   background-color: $background-grey;
   border-left: $folder-border;
   border-top: $folder-border;
-  padding-left: 1em;
   position: relative;
 
   .toggle {

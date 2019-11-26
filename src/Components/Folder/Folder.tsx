@@ -68,63 +68,63 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
         />);
       }
 
-      if (bucket.getName().length === 0) {
-        return (
-          <>
-            {children}
-          </>
-        );
-      } else {
-        return (
-          <div
-            className={classNames(
-              "folder",
-              {collapsed: this.props.collapsed},
-              {focused: bucket.getName() === this.state.path},
-            )}
-          >
-            {bucket.getChildren().length > 0 ? <div
-              className="toggle"
-              onClick={() => {
-                this.setState({collapseChildren: !this.state.collapseChildren});
-              }}
-              >
-              {this.state.collapseChildren ? "+" : "-"}
-            </div> : ""}
-            <NavLink
-              className="title"
-              path={bucket.getName()}
-              onClick={() => {
-                this.setState({collapseChildren: false});
-              }}
+      return (
+        <div
+          className={classNames(
+            {root: bucket.getName().length === 0},
+            {folder: bucket.getName().length > 0},
+            {collapsed: this.props.collapsed},
+            {focused: bucket.getName() === this.state.path},
+          )}
+        >
+          {bucket.getChildren().length > 0 ? <div
+            className="toggle"
+            onClick={() => {
+              this.setState({collapseChildren: !this.state.collapseChildren});
+            }}
             >
-              {bucket.getName()}
-            </NavLink>
-            <div
-              className="create"
-              onClick={() => {
-                this.setState({create: true});
-              }}
-            />
-            <div className="children">
-              {children}
-            </div>
+            {this.state.collapseChildren ? "+" : "-"}
+          </div> : ""}
+          <NavLink
+            className="title"
+            path={bucket.getName()}
+            onClick={() => {
+              this.setState({collapseChildren: false});
+            }}
+          >
+            {bucket.getName()}
+          </NavLink>
+          <div
+            className="create"
+            onClick={() => {
+              this.setState({create: true});
+            }}
+          />
+          <div className="children">
+            {children}
           </div>
-        );
-      }
+        </div>
+      );
     } else {
+      console.log(this.state);
+      console.log(Bucket.get(""));
       return (
         <div
             className={classNames(
-              "folder",
+              {root: !this.state.parentName || this.state.parentName.length === 0},
+              {folder: this.state.parentName && this.state.parentName.length > 0},
               "new-bucket",
             )}
           >
-          <span>{this.state.parentName}.</span>
-            <input
-              ref={this.inputRef}
-              className="title"
-            />
+          {
+            this.state.parentName && this.state.parentName.length > 0 ?
+            <span>{this.state.parentName}.</span>
+            : ""
+          }
+          <input
+            ref={this.inputRef}
+            className="title"
+          />
           <div
             className="create confirm"
             onClick={this.newBucket}
