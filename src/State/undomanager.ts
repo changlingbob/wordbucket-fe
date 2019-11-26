@@ -81,7 +81,6 @@ export function addBucket(bucketName: string, parent: Bucket, dispatch: () => vo
     dispatch,
     redo: () => parentBucket.addChild(freshBucket),
     undo: () => {
-      console.log("remove");
       parentBucket.removeChild(bucketName);
     },
   });

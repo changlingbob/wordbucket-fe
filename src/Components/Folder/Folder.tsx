@@ -106,8 +106,6 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
         </div>
       );
     } else {
-      console.log(this.state);
-      console.log(Bucket.get(""));
       return (
         <div
             className={classNames(
