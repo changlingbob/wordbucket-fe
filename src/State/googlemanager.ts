@@ -13,7 +13,6 @@ interface IFilenameMap {
 class GoogleManager {
   private GoogleAuth?: gapi.auth2.GoogleAuth;
   private fileIds: IFilenameMap = {};
-  private fileName: string = "wordbucket.json";
   private clientId: string = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
   private loadBucket: (bucketString: string) => void;
 
@@ -62,28 +61,50 @@ class GoogleManager {
   }
 
   public load = async () => {
+    this.loadFiles().then((files: string[]) => {
+      files.forEach(this.loadBucket);
+    });
+  }
+
+  private loadFile = async (fileName: string) => {
+    return gapi.client.drive.files.get({
+      alt: "media",
+      fileId: this.fileIds[fileName],
+    }).then((res) => {
+      console.log(`got file:`);
+      console.log(res);
+      return res;
+    });
+  }
+
+  private loadFiles = async (): Promise<string[]> => {
     console.log("load function");
     if (Object.keys(this.fileIds).length > 0) {
-      Promise.all(
-        Object.keys(this.fileIds).map(
-          (fileName) => {
-            return gapi.client.drive.files.get({
-              alt: "media",
-              fileId: this.fileIds[fileName],
-            }).then((res) => {
-              console.log(`got file:`);
-              console.log(res);
-              return res;
-            });
-          },
-        ),
+      return Promise.all(
+        Object.keys(this.fileIds).map(this.loadFile),
       ).then((files) => {
         console.log("promise has returned");
         console.log(files);
+        return files.map((file) => file.body);
       });
     } else {
-      this.getFileIds().then((ids) => {if (Object.keys(ids).length > 0) {this.load(); }});
+      return this.getFileIds().then((ids) => {
+          if (Object.keys(ids).length > 0) {
+            return this.loadFiles();
+          } else {
+            return [];
+          }
+        });
     }
+  }
+
+  private saveFile = async (data: string, id: string) => {
+    return gapi.client.request({
+      body: data,
+      method: "PATCH",
+      params: { uploadType: "media" },
+      path: `/upload/drive/v3/files/${id}`,
+    });
   }
 
   private create = async (fileName: string): Promise<IFilenameMap> => {
