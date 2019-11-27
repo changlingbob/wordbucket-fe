@@ -1,6 +1,6 @@
 class GoogleManager {
   private GoogleAuth?: gapi.auth2.GoogleAuth;
-  private fileId?: string;
+  private fileIds: string[] = [];
   private fileName: string = "wordbucket.json";
   private clientId: string = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
   private loadBucket: (bucketString: string) => void;
@@ -50,19 +50,20 @@ class GoogleManager {
   }
 
   public load = async () => {
-    if (this.fileId) {
+    if (this.fileIds) {
       gapi.client.drive.files.get({
         alt: "media",
-        fileId: this.fileId,
+        fileId: this.fileIds[0],
       }).then((res) => {
-        console.log(`got file ${res}`);
+        console.log(`got file:`);
+        console.log(res);
       });
     } else {
-      this.getFileId().then(this.load);
+      this.getFileIds().then(this.load);
     }
   }
 
-  private create = async () => {
+  private create = async (): Promise<string[]> => {
     return gapi.client.drive.files.create({
       fields: "id",
       resource: { name: this.fileName, parents: ["appDataFolder"] },
@@ -71,13 +72,13 @@ class GoogleManager {
         && response.result
         && response.result.id
       ) {
-        this.fileId = response.result.id;
-        return this.fileId;
+        this.fileIds.push(response.result.id);
       }
+      return this.fileIds;
     });
   }
 
-  private getFileId = async () => {
+  private getFileIds = async (): Promise<string[]> => {
     return gapi.client.drive.files.list({
       fields: "files(id)",
       q: `name="${this.fileName}"`,
@@ -89,8 +90,8 @@ class GoogleManager {
         && response.result.files[0]
         && response.result.files[0].id
       ) {
-        this.fileId = response.result.files[0].id;
-        return this.fileId;
+        this.fileIds = response.result.files.map((file) => file.id || "");
+        return this.fileIds;
       } else {
         return this.create();
       }
