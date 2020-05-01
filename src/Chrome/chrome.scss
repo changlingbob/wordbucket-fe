@@ -38,6 +38,7 @@
   .center {
     display: flex;
     flex: 1;
+    overflow-y: hidden;
 
     .sidebar {
       flex-grow: 0;
