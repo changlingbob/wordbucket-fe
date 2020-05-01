@@ -23,7 +23,7 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private word: Word|undefined;
   private bucket: Bucket;
   private navigate: () => void;
-  private debounceLength = 1500;
+  private debounceLength = 2500;
 
   constructor(props: IWordEditProps) {
     super(props);
