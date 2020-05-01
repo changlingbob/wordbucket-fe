@@ -1,4 +1,5 @@
 import React from "react";
+import Wordbucket from "wordbucket";
 import Folder from "../Components/Folder/Folder";
 import { BucketState, IApplicationState } from "../State/state";
 
@@ -50,21 +51,28 @@ class SideBar extends React.Component<any, ISideBarState> {
     return (
       <BucketState
         render={(state: IApplicationState) => {
+          const bucketElements = Wordbucket.getBuckets().map((bucket) => {
+            return (
+              <Folder
+                bucket={bucket}
+                create={false}
+                collapsed={false}
+                inPath={state.inPath}
+                path={state.path}
+                parentName=""
+              />
+            );
+          });
+
           const container = (
             <div
               className ="sidebar"
               onPointerDown={dragStart}
               onPointerUp={cancelDrag}
               style={{width: self.state.width}}
-            >
-              <Folder
-                bucket={state.bucket}
-                create={false}
-                collapsed={false}
-                inPath={state.inPath}
-                path={state.path}
-              />
-            </div>
+            >{
+              bucketElements
+            }</div>
           );
 
           return container;

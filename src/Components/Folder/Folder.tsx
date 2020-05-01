@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import Bucket from "wordbucket/out/Bucket";
+import Wordbucket, { Bucket } from "wordbucket";
 import { NavLink } from "../../State/state";
 import { addBucket } from "../../State/undomanager";
 import "./Folder.scss";
@@ -10,13 +10,13 @@ interface IFolderState extends IFolderProps {
 }
 
 interface IFolderProps {
-  inPath: (bucketName: string) => boolean;
+  inPath: (bucket: Bucket) => boolean;
   bucket?: Bucket;
   collapsed: boolean;
   create: boolean;
   path: string;
   parent?: Folder;
-  parentName?: string;
+  parentName: string;
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState>  {
@@ -25,8 +25,8 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
   constructor(props: IFolderProps) {
     super(props);
     this.state = {
+      collapseChildren: !!props.bucket && !props.inPath(props.bucket),
       ...props,
-      collapseChildren: !!props.bucket && !props.inPath(props.bucket.getName()),
     };
 
     this.inputRef = React.createRef();
@@ -52,8 +52,9 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           collapsed={this.state.collapseChildren}
           inPath={this.state.inPath}
           path={this.state.path}
-          key={child.getName()}
+          key={child.title}
           create={false}
+          parentName={this.constructFullName()}
         />);
       }
       if (this.state.create) {
@@ -64,17 +65,17 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           key="create"
           create={false}
           parent={this}
-          parentName={bucket.getName()}
+          parentName={this.constructFullName()}
         />);
       }
 
       return (
         <div
           className={classNames(
-            {root: bucket.getName().length === 0},
-            {folder: bucket.getName().length > 0},
+            {root: bucket.title.length === 0},
+            {folder: bucket.title.length > 0},
             {collapsed: this.props.collapsed},
-            {focused: bucket.getName() === this.state.path},
+            {focused: bucket.title === this.state.path},
           )}
         >
           {bucket.getChildren().length > 0 ? <div
@@ -87,12 +88,12 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
           </div> : ""}
           <NavLink
             className="title"
-            path={bucket.getName()}
+            path={this.constructFullName()}
             onClick={() => {
               this.setState({collapseChildren: false});
             }}
           >
-            {bucket.getName()}
+            {bucket.title}
           </NavLink>
           <div
             className="create"
@@ -131,12 +132,19 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
     }
   }
 
+  private constructFullName(): string {
+    let out = this.state.parentName ? this.state.parentName + "." : "";
+    out += this.state.bucket?.title;
+
+    return out;
+  }
+
   private newBucket(event: any) {
     if (this.inputRef.current) {
       const parentName = this.state.parentName || "";
       const newName = (parentName ? `${parentName}.` : "") + this.inputRef.current.value;
 
-      addBucket(newName, Bucket.get(parentName), () => {
+      addBucket(newName, Wordbucket.fetch(parentName), () => {
         if (this.state.parent) {
           this.state.parent.setState({create: false});
         }

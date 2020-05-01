@@ -1,4 +1,4 @@
-import Bucket, { WordEntry } from "wordbucket";
+import Wordbucket, { Bucket, Word } from "wordbucket";
 
 interface IUndoableProps {
   dispatch: () => void;
@@ -7,9 +7,9 @@ interface IUndoableProps {
 }
 
 export class Undoable {
-  public static rootBucket: Bucket;
-  public static setRoot = (root: Bucket) => {
-    Undoable.rootBucket = root;
+  public static wordbucket: typeof Wordbucket;
+  public static setRoot = (root: typeof Wordbucket) => {
+    Undoable.wordbucket = root;
   }
 
   public static undo = () => {
@@ -31,6 +31,7 @@ export class Undoable {
       }
     }
   }
+
   private static undoQueue: Undoable[] = [];
   private static redoQueue: Undoable[] = [];
   public undo: () => void;
@@ -48,7 +49,9 @@ export class Undoable {
   }
 }
 
-export function updateWord(word: WordEntry, words: string, weight: number, dispatch: () => void) {
+// Words
+
+export function updateWord(word: Word, words: string, weight: number, dispatch: () => void) {
   const currentState = {words: word.words, weight: word.weight};
   new Undoable({
     dispatch,
@@ -57,31 +60,33 @@ export function updateWord(word: WordEntry, words: string, weight: number, dispa
   });
 }
 
-export function removeWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+export function removeWord(word: Word, bucket: Bucket, dispatch: () => void) {
   new Undoable({
     dispatch,
-    redo: () => bucket.removeWords({word}),
-    undo: () => bucket.putWords(word),
+    redo: () => bucket.add(word.words, word.weight),
+    undo: () => bucket.remove(word),
   });
 }
 
-export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+export function addWord(word: Word, bucket: Bucket, dispatch: () => void) {
   new Undoable({
     dispatch,
-    redo: () => bucket.putWords(word),
-    undo: () => bucket.removeWords({word}),
+    redo: () => bucket.add(word.words, word.weight),
+    undo: () => bucket.remove(word),
   });
 }
+
+// Buckets
 
 export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
-  const parentBucket = parent || Undoable.rootBucket;
-  const freshBucket = new Bucket(bucketName, parentBucket);
+  const parentBucket = parent || Undoable.wordbucket;
+  const freshBucket = new Bucket(bucketName);
 
   new Undoable({
     dispatch,
-    redo: () => parentBucket.addChild(freshBucket),
+    redo: () => parentBucket.attach(freshBucket),
     undo: () => {
-      parentBucket.removeChild(bucketName);
+      parentBucket.detach(freshBucket);
     },
   });
 }
@@ -91,7 +96,7 @@ export function removeBucket(bucket: Bucket, parent: Bucket, dispatch: () => voi
 
   new Undoable({
     dispatch,
-    redo: () => parent.removeChild(bucket),
-    undo: () => parent.addChild(bucketBackup),
+    redo: () => parent.detach(bucket),
+    undo: () => parent.attach(bucketBackup),
   });
 }

@@ -1,4 +1,4 @@
-import Bucket from "wordbucket/out/Bucket";
+import { Bucket } from "wordbucket";
 
 // Figuring out how do to this was a pain. It critically doesn't use an NPM module
 // because there isn't one that does the right stuff properly that I could find.

@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import Bucket, { WordEntry } from "wordbucket";
+import { Bucket, Word } from "wordbucket";
 import { addWord, removeWord, updateWord } from "../../State/undomanager";
 import "./WordEdit.scss";
 
@@ -14,15 +14,16 @@ interface IWordEditProps {
   bucket: Bucket;
   navigate: () => void;
   create?: boolean;
-  word?: WordEntry;
+  word?: Word;
 }
 
 class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private wordsDebounce: any;
   private weightDebounce: any;
-  private word: WordEntry|undefined;
+  private word: Word|undefined;
   private bucket: Bucket;
   private navigate: () => void;
+  private debounceLength = 1500;
 
   constructor(props: IWordEditProps) {
     super(props);
@@ -70,14 +71,14 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({weight: event.target.value});
     clearInterval(this.weightDebounce);
-    this.weightDebounce = setTimeout(doUpdate, 800);
+    this.weightDebounce = setTimeout(doUpdate, this.debounceLength);
   }
 
   private wordChange(event: any) {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({words: event.target.value});
     clearInterval(this.wordsDebounce);
-    this.wordsDebounce = setTimeout(doUpdate, 800);
+    this.wordsDebounce = setTimeout(doUpdate, this.debounceLength);
   }
 
   private updateWord() {
@@ -96,7 +97,7 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
 
   private doUpdate() {
     if (!this.word && this.state.words && this.state.weight) {
-      this.word = new WordEntry(this.state.words, +this.state.weight, this.bucket);
+      this.word = new Word(this.state.words, +this.state.weight);
       addWord(this.word, this.bucket, this.navigate);
     } else if (this.word) {
       updateWord(this.word, this.state.words, +this.state.weight, this.navigate);
