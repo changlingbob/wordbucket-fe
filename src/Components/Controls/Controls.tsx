@@ -14,11 +14,19 @@ interface IControlsState {
 class Controls extends React.Component<any, IControlsState> {
   public constructor(props: any) {
     super(props);
+
+    let content = "";
+    let showPanel = false;
+    if (window.location.search.indexOf("privacy") > -1) {
+      content = "Apparently I legally need a privacy policy, and it's this: I wouldn't even know how to get your data back out of this app. If you choose to log in through Google, the app saves your bucket data to Google Drive, specifically so I don't have to figure out how to save data any other way, so consider your secret random outcomes safe.";
+      showPanel = true;
+    }
+
     this.state = {
-      content: "",
-      doneFunc: () => alert(1),
-      doneString: "donezo",
-      showPanel: false,
+      content,
+      doneFunc: this.clearPanel,
+      doneString: "Thanks",
+      showPanel,
       // content: "",
       // doneFunc: (details: string) => null,
       // doneString: "",
