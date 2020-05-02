@@ -1,5 +1,6 @@
 import React from "react";
 import Wordbucket from "wordbucket";
+import Creator from "../Components/Folder/Creator";
 import Folder from "../Components/Folder/Folder";
 import { BucketState, IApplicationState } from "../State/state";
 
@@ -63,6 +64,10 @@ class SideBar extends React.Component<any, ISideBarState> {
               />
             );
           });
+
+          bucketElements.push(<Creator
+            parentName=""
+          />);
 
           const container = (
             <div

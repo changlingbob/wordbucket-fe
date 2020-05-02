@@ -44,7 +44,6 @@ export class Undoable {
     this.dispatch = memo.dispatch;
 
     Undoable.undoQueue.push(this);
-    console.log(memo);
     this.redo();
     Undoable.redoQueue = [];
   }
@@ -79,15 +78,25 @@ export function addWord(word: Word, bucket: Bucket, dispatch: () => void) {
 
 // Buckets
 
-export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
-  const parentBucket = parent || Undoable.wordbucket;
+export function addBucket(bucketName: string, parentName: string, dispatch: () => void) {
+  let attachFunc: (bucket: Bucket) => void;
+  let detachFunc: (bucket: Bucket) => void;
+  if (parentName && Wordbucket.check(parentName)) {
+    const bucket = Wordbucket.fetch(parentName);
+    attachFunc = bucket.attach;
+    detachFunc = bucket.detach;
+  } else {
+    attachFunc = Wordbucket.attach;
+    detachFunc = Wordbucket.detach;
+  }
+
   const freshBucket = new Bucket(bucketName);
 
   new Undoable({
     dispatch,
-    redo: () => parentBucket.attach(freshBucket),
+    redo: () => attachFunc(freshBucket),
     undo: () => {
-      parentBucket.detach(freshBucket);
+      detachFunc(freshBucket);
     },
   });
 }

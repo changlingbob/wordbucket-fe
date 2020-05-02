@@ -98,19 +98,22 @@ function bucketToPathname(bucket: string): string {
 export const NavLink = ({ ...props }) =>
   <StateContext.Consumer>
     {
-      (State: IApplicationState) =>
-      <a
-        {...props}
-        className={classNames(
-          props.className,
-          {active: State.path === props.path},
-        )}
-        onClick={(e) => {
-          props.onClick(e);
-          State.navigate(props.path);
-          e.preventDefault();
-        }}
-      />
+      (State: IApplicationState) => {
+        console.log(`State: ${State.path}`);
+        console.log(`Props: ${props.path}`);
+        return <a
+          {...props}
+          className={classNames(
+            props.className,
+            {active: State.path === props.path},
+          )}
+          onClick={(e) => {
+            props.onClick(e);
+            State.navigate(props.path);
+            e.preventDefault();
+          }}
+        />;
+      }
     }
   </StateContext.Consumer>;
 
