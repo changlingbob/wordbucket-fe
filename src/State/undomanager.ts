@@ -44,6 +44,7 @@ export class Undoable {
     this.dispatch = memo.dispatch;
 
     Undoable.undoQueue.push(this);
+    console.log(memo);
     this.redo();
     Undoable.redoQueue = [];
   }
@@ -63,8 +64,8 @@ export function updateWord(word: Word, words: string, weight: number, dispatch: 
 export function removeWord(word: Word, bucket: Bucket, dispatch: () => void) {
   new Undoable({
     dispatch,
-    redo: () => bucket.add(word.words, word.weight),
-    undo: () => bucket.remove(word),
+    redo: () => bucket.remove(word),
+    undo: () => bucket.add(word.words, word.weight),
   });
 }
 
