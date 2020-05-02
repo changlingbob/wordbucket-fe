@@ -115,11 +115,6 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
               "new-bucket",
             )}
           >
-          {
-            this.state.parentName && this.state.parentName.length > 0 ?
-            <span>{this.state.parentName}.</span>
-            : ""
-          }
           <input
             ref={this.inputRef}
             className="title"
@@ -142,7 +137,7 @@ class Folder extends React.Component<IFolderProps, IFolderState>  {
   private newBucket(event: any) {
     if (this.inputRef.current) {
       const parentName = this.state.parentName || "";
-      const newName = (parentName ? `${parentName}.` : "") + this.inputRef.current.value;
+      const newName = this.inputRef.current.value;
 
       addBucket(newName, Wordbucket.fetch(parentName), () => {
         if (this.state.parent) {
