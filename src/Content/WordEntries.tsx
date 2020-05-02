@@ -1,5 +1,5 @@
 import React from "react";
-import Wordbucket, { Bucket, Word } from "wordbucket";
+import Wordbucket, { Word } from "wordbucket";
 import WordEdit from "../Components/WordEdit/WordEdit";
 import { BucketState, IApplicationState } from "../State/state";
 import "./Content.scss";
@@ -8,19 +8,15 @@ const WordEntries = () => {
   return (
     <BucketState render={(state: IApplicationState) => {
       if (state.path === "" || !!!Wordbucket.check(state.path)) {
-        console.log("none");
         return null;
       }
       const bucket = Wordbucket.fetch(state.path);
-      console.log(state.path);
+
       if (!bucket && state.path.indexOf(".") > -1) {
-        console.log("got a dot");
         state.navigate(state.path.slice(0, state.path.lastIndexOf(".")));
       } else if (!bucket) {
-        console.log("no bucket");
         state.navigate("");
       } else {
-        console.log("bucket!");
         const wordEntries: JSX.Element[] = [];
         const words: Word[] = bucket.getWords();
 

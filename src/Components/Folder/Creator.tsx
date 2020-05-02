@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import React from "react";
-import Wordbucket, { Bucket } from "wordbucket";
 import { addBucket } from "../../State/undomanager";
 import Folder from "./Folder";
 

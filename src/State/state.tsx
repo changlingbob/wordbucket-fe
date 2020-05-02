@@ -2,7 +2,6 @@ import classNames from "classnames";
 import React, { ReactNode } from "react";
 import Wordbucket, { Bucket } from "wordbucket";
 import GoogleManager from "./googlemanager";
-import { Undoable } from "./undomanager";
 
 export interface IApplicationState {
   googleManager: GoogleManager;
