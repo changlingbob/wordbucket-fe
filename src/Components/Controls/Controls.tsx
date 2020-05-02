@@ -15,7 +15,7 @@ class Controls extends React.Component<any, IControlsState> {
   public constructor(props: any) {
     super(props);
     this.state = {
-      content: "this is my content hoorah",
+      content: "",
       doneFunc: () => alert(1),
       doneString: "donezo",
       showPanel: false,
@@ -31,7 +31,7 @@ class Controls extends React.Component<any, IControlsState> {
         render = {(state: IApplicationState) => {
           const doExport = (ev: any) => {
             this.setState({
-              // content: Bucket.serialize(),
+              content: Wordbucket.serialise(),
               doneFunc: this.clearPanel,
               doneString: "OK",
               showPanel: true,
