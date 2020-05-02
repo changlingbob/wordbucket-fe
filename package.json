@@ -20,7 +20,7 @@
     "sass-lint": "^1.13.1",
     "tslint": "^5.20.1",
     "typescript": "^3.8.3",
-    "wordbucket": "../wordbucket"
+    "wordbucket": "git+https://github.com/changlingbob/wordbucket.git#master"
   },
   "scripts": {
     "start": "react-scripts start",
