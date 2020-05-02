@@ -1,4 +1,5 @@
-import Bucket from "wordbucket/out/Bucket";
+import Wordbucket, { Bucket } from "wordbucket";
+import { Undoable } from "./undomanager";
 
 // Figuring out how do to this was a pain. It critically doesn't use an NPM module
 // because there isn't one that does the right stuff properly that I could find.
@@ -6,13 +7,13 @@ import Bucket from "wordbucket/out/Bucket";
 // css class, but then using a gloablly registered name to load. The documentation
 // is mostly reading npm:gdrive-appdata and hoping it's accurate.
 
-interface IFilenameMap {
+interface IStringMap {
   [key: string]: string;
 }
 
 class GoogleManager {
   private GoogleAuth?: gapi.auth2.GoogleAuth;
-  private fileIds: IFilenameMap = {};
+  private fileIds: IStringMap = {};
   private clientId: string = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
   private loadBucket: (bucketString: string) => void;
 
@@ -39,6 +40,7 @@ class GoogleManager {
       gapi.load("auth2", () => {
         gapi.load("client", () => {
           gapi.client.load("drive", "v3", initGapi);
+
         });
       });
     };
@@ -47,6 +49,7 @@ class GoogleManager {
       gapi.auth2.getAuthInstance().then((auth) => {
         self.GoogleAuth = auth;
         self.load();
+        Undoable.setSave(this.save);
       }, (err) => {
         alert(JSON.stringify(err));
         throw err;
@@ -54,9 +57,38 @@ class GoogleManager {
     };
   }
 
-  public save = async (data: Bucket) => {
+  public save = async () => {
     if (this.GoogleAuth) {
-      // gapi.client.drive.files.;
+      const bucketNames = Wordbucket.getBuckets().map((bucket: Bucket) => bucket.title);
+      const data: IStringMap = {};
+      const remove: string[] = [];
+      const add: string[] = [];
+
+      for (const bucketName of bucketNames) {
+        data[bucketName + ".json"] = Wordbucket.serialise(bucketName);
+        if (!this.fileIds[bucketName + ".json"]) {
+          add.push(bucketName + ".json");
+        }
+      }
+
+      for (const oldFile of Object.keys(this.fileIds)) {
+        if (!data[oldFile]) {
+          remove.push(oldFile);
+        }
+      }
+
+      const promises = add.map((fileName) => this.create(fileName));
+      Promise.all(promises).then(() => {
+        for (const file of Object.keys(data)) {
+          this.saveFile(this.fileIds[file], data[file]);
+        }
+      });
+
+      for (const fileName of remove) {
+        this.delete(this.fileIds[fileName]);
+        delete this.fileIds[fileName];
+      }
+
     }
   }
 
@@ -71,20 +103,15 @@ class GoogleManager {
       alt: "media",
       fileId: this.fileIds[fileName],
     }).then((res) => {
-      console.log(`got file:`);
-      console.log(res);
       return res;
     });
   }
 
   private loadFiles = async (): Promise<string[]> => {
-    console.log("load function");
     if (Object.keys(this.fileIds).length > 0) {
       return Promise.all(
         Object.keys(this.fileIds).map(this.loadFile),
       ).then((files) => {
-        console.log("promise has returned");
-        console.log(files);
         return files.map((file) => file.body);
       });
     } else {
@@ -98,7 +125,7 @@ class GoogleManager {
     }
   }
 
-  private saveFile = async (data: string, id: string) => {
+  private saveFile = async (id: string, data: string) => {
     return gapi.client.request({
       body: data,
       method: "PATCH",
@@ -107,8 +134,7 @@ class GoogleManager {
     });
   }
 
-  private create = async (fileName: string): Promise<IFilenameMap> => {
-    console.log("create function");
+  private create = async (fileName: string): Promise<IStringMap> => {
     return gapi.client.drive.files.create({
       fields: "id",
       resource: { name: fileName, parents: ["appDataFolder"] },
@@ -123,8 +149,13 @@ class GoogleManager {
     });
   }
 
-  private getFileIds = async (): Promise<IFilenameMap> => {
-    console.log("getFileIds function");
+  private delete = async (fileId: string): Promise<any> => {
+    return gapi.client.drive.files.delete({
+      fileId,
+    });
+  }
+
+  private getFileIds = async (): Promise<IStringMap> => {
     return gapi.client.drive.files.list({
       fields: "files(name, id)",
       spaces: "appDataFolder",
@@ -134,8 +165,7 @@ class GoogleManager {
         && response.result.files
         && response.result.files.length > 0
       ) {
-        const newMap: IFilenameMap = {};
-        console.log(response);
+        const newMap: IStringMap = {};
         response.result.files.forEach(
           (file) => {
             if (file.name && file.id) {

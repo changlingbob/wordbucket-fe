@@ -1,5 +1,5 @@
 import React from "react";
-import Bucket from "wordbucket";
+import Wordbucket from "wordbucket";
 import { BucketState, IApplicationState } from "../../State/state";
 import "./ResultBox.scss";
 
@@ -8,7 +8,7 @@ class ResultBox extends React.Component {
   public render() {
     return (
       <BucketState render={(state: IApplicationState) => {
-        if (state.path === "") {
+        if (state.path === "" || !!!Wordbucket.check(state.path)) {
           return <div className="result-title">
             Select a table to start.
           </div>;
@@ -17,7 +17,7 @@ class ResultBox extends React.Component {
           <>
             <div className="result-title">{state.path}</div>
             <div className="result-container">
-              <div className="results">{Bucket.generate(state.path)}</div>
+              <div className="results">{Wordbucket.generate(state.path)}</div>
               <div
                 className="roller"
                 onClick={(ev) => this.forceUpdate()}

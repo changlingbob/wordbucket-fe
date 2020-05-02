@@ -1,5 +1,5 @@
 import React from "react";
-import Bucket from "wordbucket";
+import Wordbucket from "wordbucket";
 import { BucketState, IApplicationState } from "../../State/state";
 import { Undoable } from "../../State/undomanager";
 import "./Controls.scss";
@@ -31,7 +31,7 @@ class Controls extends React.Component<any, IControlsState> {
         render = {(state: IApplicationState) => {
           const doExport = (ev: any) => {
             this.setState({
-              content: Bucket.serialize(),
+              // content: Bucket.serialize(),
               doneFunc: this.clearPanel,
               doneString: "OK",
               showPanel: true,

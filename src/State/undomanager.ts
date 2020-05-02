@@ -1,4 +1,4 @@
-import Bucket, { WordEntry } from "wordbucket";
+import Wordbucket, { Bucket, Word } from "wordbucket";
 
 interface IUndoableProps {
   dispatch: () => void;
@@ -7,11 +7,6 @@ interface IUndoableProps {
 }
 
 export class Undoable {
-  public static rootBucket: Bucket;
-  public static setRoot = (root: Bucket) => {
-    Undoable.rootBucket = root;
-  }
-
   public static undo = () => {
     if (Undoable.undoQueue.length > 0) {
       const memo = Undoable.undoQueue.pop();
@@ -20,6 +15,7 @@ export class Undoable {
         Undoable.redoQueue.push(memo);
       }
     }
+    Undoable.startSave();
   }
 
   public static redo = () => {
@@ -30,9 +26,26 @@ export class Undoable {
         Undoable.undoQueue.push(memo);
       }
     }
+    Undoable.startSave();
   }
+
+  public static setSave(save: () => void) {
+    Undoable.save = save;
+  }
+
   private static undoQueue: Undoable[] = [];
   private static redoQueue: Undoable[] = [];
+  private static save: () => void;
+  private static debounce: NodeJS.Timeout;
+  private static debounceTime: 15000;
+
+  private static startSave() {
+    if (Undoable.debounce) {
+      clearTimeout(Undoable.debounce);
+    }
+    Undoable.debounce = setTimeout(Undoable.save, Undoable.debounceTime);
+  }
+
   public undo: () => void;
   public redo: () => void;
   public dispatch: () => void;
@@ -45,10 +58,13 @@ export class Undoable {
     Undoable.undoQueue.push(this);
     this.redo();
     Undoable.redoQueue = [];
+    Undoable.startSave();
   }
 }
 
-export function updateWord(word: WordEntry, words: string, weight: number, dispatch: () => void) {
+// Words
+
+export function updateWord(word: Word, words: string, weight: number, dispatch: () => void) {
   const currentState = {words: word.words, weight: word.weight};
   new Undoable({
     dispatch,
@@ -57,31 +73,43 @@ export function updateWord(word: WordEntry, words: string, weight: number, dispa
   });
 }
 
-export function removeWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+export function removeWord(word: Word, bucket: Bucket, dispatch: () => void) {
   new Undoable({
     dispatch,
-    redo: () => bucket.removeWords({word}),
-    undo: () => bucket.putWords(word),
+    redo: () => bucket.remove(word),
+    undo: () => bucket.add(word.words, word.weight),
   });
 }
 
-export function addWord(word: WordEntry, bucket: Bucket, dispatch: () => void) {
+export function addWord(word: Word, bucket: Bucket, dispatch: () => void) {
   new Undoable({
     dispatch,
-    redo: () => bucket.putWords(word),
-    undo: () => bucket.removeWords({word}),
+    redo: () => bucket.add(word.words, word.weight),
+    undo: () => bucket.remove(word),
   });
 }
 
-export function addBucket(bucketName: string, parent: Bucket, dispatch: () => void) {
-  const parentBucket = parent || Undoable.rootBucket;
-  const freshBucket = new Bucket(bucketName, parentBucket);
+// Buckets
+
+export function addBucket(bucketName: string, parentName: string, dispatch: () => void) {
+  let attachFunc: (bucket: Bucket) => void;
+  let detachFunc: (bucket: Bucket) => void;
+  if (parentName && Wordbucket.check(parentName)) {
+    const bucket = Wordbucket.fetch(parentName);
+    attachFunc = bucket.attach;
+    detachFunc = bucket.detach;
+  } else {
+    attachFunc = Wordbucket.attach;
+    detachFunc = Wordbucket.detach;
+  }
+
+  const freshBucket = new Bucket(bucketName);
 
   new Undoable({
     dispatch,
-    redo: () => parentBucket.addChild(freshBucket),
+    redo: () => attachFunc(freshBucket),
     undo: () => {
-      parentBucket.removeChild(bucketName);
+      detachFunc(freshBucket);
     },
   });
 }
@@ -91,7 +119,7 @@ export function removeBucket(bucket: Bucket, parent: Bucket, dispatch: () => voi
 
   new Undoable({
     dispatch,
-    redo: () => parent.removeChild(bucket),
-    undo: () => parent.addChild(bucketBackup),
+    redo: () => parent.detach(bucket),
+    undo: () => parent.attach(bucketBackup),
   });
 }

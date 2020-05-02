@@ -1,14 +1,12 @@
 import classNames from "classnames";
 import React, { ReactNode } from "react";
-import Bucket from "wordbucket";
+import Wordbucket, { Bucket } from "wordbucket";
 import GoogleManager from "./googlemanager";
-import { Undoable } from "./undomanager";
 
 export interface IApplicationState {
-  bucket: Bucket;
-  path: string;
   googleManager: GoogleManager;
-  inPath(bucketName: string): boolean;
+  path: string;
+  inPath(bucket: Bucket): boolean;
   load(bucketString: string): void;
   navigate(path: string): void;
 }
@@ -22,7 +20,6 @@ export class StateProvider extends React.Component {
     super(props);
 
     this.state = {
-      bucket: new Bucket(),
       googleManager: new GoogleManager(this.load),
       inPath: this.inPath,
       load: this.load,
@@ -30,14 +27,14 @@ export class StateProvider extends React.Component {
       path: pathnameToBucket(window.location.pathname),
     };
 
-    Undoable.setRoot(this.state.bucket);
-
-    // setTimeout(() => {
-    //   console.log("loading");
-      // tslint:disable-next-line max-line-length
-    //   const payload = '{"children":[{"children":[{"children":[],"name":"root","words":[{"words":"${hex.terrain}. ${hex.additional}","weight":1},{"words":"${hex.structure}. ${hex.additional}","weight":1},{"words":"${hex.plants}. ${hex.additional}","weight":1},{"words":"${hex.location}. ${hex.additional}","weight":0.5}]},{"children":[],"name":"additional","words":[{"words":"","weight":5},{"words":"Nearby is ${hex.root}","weight":0.5}]},{"children":[{"children":[],"name":"occupied","words":[{"words":"","weight":5},{"words":". There are signs of recent occupation","weight":1},{"words":". There are friendly creatures here","weight":1},{"words":". There are neutral creatures here","weight":1},{"words":". There are unfriendly creatures here","weight":1}]},{"children":[],"name":"rarelyoccupied","words":[{"words":"","weight":5},{"words":"${hex.structure.occupied}","weight":1}]},{"children":[],"name":"status","words":[{"words":"","weight":2},{"words":"tumbledown","weight":1},{"words":"ruined","weight":1},{"words":"overgrown","weight":1},{"words":"poorly maintained","weight":1},{"words":"neatly maintained","weight":0.5},{"words":"freshly painted","weight":0.1}]}],"name":"structure","words":[{"words":"&[size.extreme, hex.structure.status] amphitheatre${hex.structure.rarelyoccupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] cairn","weight":1},{"words":"&{size} number of ${hex.structure.status} statues","weight":1},{"words":"&[size.extreme, hex.structure.status] monastry${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] tower${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] temple${hex.structure.occupied}","weight":1},{"words":"&{size.extreme} obelisk","weight":1},{"words":"&{size.extreme} camp${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] graveyard","weight":1},{"words":"&{size} lookout post${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] freestanding arch","weight":1},{"words":"&{size} hanging gardens${hex.structure.rarelyoccupied}","weight":1},{"words":"some $[size, hex.structure.status] canals","weight":1},{"words":"&[size, hex.structure.status] hovel${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] village${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] mill${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] bridge","weight":1}]},{"children":[],"name":"terrain","words":[{"words":"WIP","weight":1}]},{"children":[],"name":"plants","words":[{"words":"WIP","weight":1}]},{"children":[],"name":"location","words":[{"words":"WIP","weight":1}]}],"name":"hex","words":[{"words":"You come across ${hex.root}","weight":1}]},{"children":[{"children":[],"name":"extreme","words":[{"words":"${size}","weight":5},{"words":"tiny","weight":1},{"words":"enormous","weight":1},{"words":"huge","weight":1}]}],"name":"size","words":[{"words":"","weight":5},{"words":"small","weight":2},{"words":"large","weight":2},{"words":"modest","weight":1}]}],"name":"","words":[]}';
-    //   this.load(payload);
-    // }, 2500);
+    setTimeout(() => {
+      if (Wordbucket.getBuckets().length === 0) {
+        // tslint:disable-next-line: no-console
+        console.log("No buckets loaded, adding defaults");
+        // tslint:disable-next-line max-line-length
+        this.load('{"hex":{"words":[{"words":"You come across ${hex.root}","weight":1}],"children":{"root":{"words":[{"words":"${hex.terrain}. ${hex.additional}","weight":1},{"words":"${hex.structure}. ${hex.additional}","weight":1},{"words":"${hex.plants}. ${hex.additional}","weight":1},{"words":"${hex.location}. ${hex.additional}","weight":0.5}],"children":{}},"additional":{"words":[{"words":"","weight":5},{"words":"Nearby is ${hex.root}","weight":0.5}],"children":{}},"structure":{"words":[{"words":"${$a, size.extreme, hex.structure.status} amphitheatre${hex.structure.rarelyoccupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} cairn","weight":1},{"words":"${$a, size} number of ${hex.structure.status} statues","weight":1},{"words":"${$a, size.extreme, hex.structure.status} monastry${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} tower${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} temple${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme} obelisk","weight":1},{"words":"${$a, size.extreme} camp${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} graveyard","weight":1},{"words":"${$a, size} lookout post${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} freestanding arch","weight":1},{"words":"${$a, size} hanging gardens${hex.structure.rarelyoccupied}","weight":1},{"words":"some ${size, hex.structure.status} canals","weight":1},{"words":"${$a, size, hex.structure.status} hovel${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} village${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} mill${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} bridge","weight":1}],"children":{"occupied":{"words":[{"words":"","weight":5},{"words":". There are signs of recent occupation","weight":1},{"words":". There are friendly creatures here","weight":1},{"words":". There are neutral creatures here","weight":1},{"words":". There are unfriendly creatures here","weight":1}],"children":{}},"rarelyoccupied":{"words":[{"words":"","weight":5},{"words":"${hex.structure.occupied}","weight":1}],"children":{}},"status":{"words":[{"words":"","weight":2},{"words":"tumbledown","weight":1},{"words":"ruined","weight":1},{"words":"overgrown","weight":1},{"words":"poorly maintained","weight":1},{"words":"neatly maintained","weight":0.5},{"words":"freshly painted","weight":0.1}],"children":{}}}},"terrain":{"words":[{"words":"WIP","weight":1}],"children":{}},"plants":{"words":[{"words":"WIP","weight":1}],"children":{}},"location":{"words":[{"words":"WIP","weight":1}],"children":{}}}},"size":{"words":[{"words":"","weight":5},{"words":"small","weight":2},{"words":"large","weight":2},{"words":"modest","weight":1}],"children":{"extreme":{"words":[{"words":"${size}","weight":5},{"words":"tiny","weight":1},{"words":"enormous","weight":1},{"words":"huge","weight":1}],"children":{}}}}}');
+      }
+    }, 2500);
 
     window.onpopstate = () => {
       this.setState({ path: pathnameToBucket(window.location.pathname) });
@@ -56,14 +53,10 @@ export class StateProvider extends React.Component {
 
   public load = (bucketString: string) => {
     try {
-      Bucket.load(bucketString);
-      console.log("loaded");
+      Wordbucket.deserialise(bucketString);
     } catch (e) {
-      console.log(`whoops: ${e}`);
-      // tslint:disable-next-line max-line-length
-      Bucket.load('{"children":[{"children":[{"children":[],"name":"root","words":[{"words":"${hex.terrain}. ${hex.additional}","weight":1},{"words":"${hex.structure}. ${hex.additional}","weight":1},{"words":"${hex.plants}. ${hex.additional}","weight":1},{"words":"${hex.location}. ${hex.additional}","weight":0.5}]},{"children":[],"name":"additional","words":[{"words":"","weight":5},{"words":"Nearby is ${hex.root}","weight":0.5}]},{"children":[{"children":[],"name":"occupied","words":[{"words":"","weight":5},{"words":". There are signs of recent occupation","weight":1},{"words":". There are friendly creatures here","weight":1},{"words":". There are neutral creatures here","weight":1},{"words":". There are unfriendly creatures here","weight":1}]},{"children":[],"name":"rarelyoccupied","words":[{"words":"","weight":5},{"words":"${hex.structure.occupied}","weight":1}]},{"children":[],"name":"status","words":[{"words":"","weight":2},{"words":"tumbledown","weight":1},{"words":"ruined","weight":1},{"words":"overgrown","weight":1},{"words":"poorly maintained","weight":1},{"words":"neatly maintained","weight":0.5},{"words":"freshly painted","weight":0.1}]}],"name":"structure","words":[{"words":"&[size.extreme, hex.structure.status] amphitheatre${hex.structure.rarelyoccupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] cairn","weight":1},{"words":"&{size} number of ${hex.structure.status} statues","weight":1},{"words":"&[size.extreme, hex.structure.status] monastry${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] tower${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] temple${hex.structure.occupied}","weight":1},{"words":"&{size.extreme} obelisk","weight":1},{"words":"&{size.extreme} camp${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] graveyard","weight":1},{"words":"&{size} lookout post${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] freestanding arch","weight":1},{"words":"&{size} hanging gardens${hex.structure.rarelyoccupied}","weight":1},{"words":"some $[size, hex.structure.status] canals","weight":1},{"words":"&[size, hex.structure.status] hovel${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] village${hex.structure.occupied}","weight":1},{"words":"&[size, hex.structure.status] mill${hex.structure.occupied}","weight":1},{"words":"&[size.extreme, hex.structure.status] bridge","weight":1}]},{"children":[],"name":"terrain","words":[{"words":"WIP","weight":1}]},{"children":[],"name":"plants","words":[{"words":"WIP","weight":1}]},{"children":[],"name":"location","words":[{"words":"WIP","weight":1}]}],"name":"hex","words":[{"words":"You come across ${hex.root}","weight":1}]},{"children":[{"children":[],"name":"extreme","words":[{"words":"${size}","weight":5},{"words":"tiny","weight":1},{"words":"enormous","weight":1},{"words":"huge","weight":1}]}],"name":"size","words":[{"words":"","weight":5},{"words":"small","weight":2},{"words":"large","weight":2},{"words":"modest","weight":1}]}],"name":"","words":[]}');
-      Bucket.load('{"name": "foo", "children": [], "words": [{"words": "test", "weight": 1}, {"words": "bar", "weight": 2}]}');
-      Bucket.load('{"name": "foo", "children": [], "words": [{"words": "baz", "weight": 3}, {"words": "bang", "weight": 4}]}');
+      // tslint:disable-next-line: no-console
+      console.error(`Error loading buckets: ${e}`);
     }
     this.setState({});
   }
@@ -75,8 +68,8 @@ export class StateProvider extends React.Component {
     }
   }
 
-  public inPath = (bucketName: string) => {
-    const bucketArray = bucketName.split(".");
+  public inPath = (bucket: Bucket) => {
+    const bucketArray = bucket.title.split(".");
     const pathArray = this.state.path.split(".");
     let diff = 0;
 
@@ -103,19 +96,20 @@ function bucketToPathname(bucket: string): string {
 export const NavLink = ({ ...props }) =>
   <StateContext.Consumer>
     {
-      (State: IApplicationState) =>
-      <a
-        {...props}
-        className={classNames(
-          props.className,
-          {active: State.path === props.path},
-        )}
-        onClick={(e) => {
-          props.onClick(e);
-          State.navigate(props.path);
-          e.preventDefault();
-        }}
-      />
+      (State: IApplicationState) => {
+        return <a
+          {...props}
+          className={classNames(
+            props.className,
+            {active: State.path === props.path},
+          )}
+          onClick={(e) => {
+            props.onClick(e);
+            State.navigate(props.path);
+            e.preventDefault();
+          }}
+        />;
+      }
     }
   </StateContext.Consumer>;
 
