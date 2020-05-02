@@ -1,4 +1,5 @@
-import { Bucket } from "wordbucket";
+import Wordbucket, { Bucket } from "wordbucket";
+import { Undoable } from "./undomanager";
 
 // Figuring out how do to this was a pain. It critically doesn't use an NPM module
 // because there isn't one that does the right stuff properly that I could find.
@@ -6,13 +7,13 @@ import { Bucket } from "wordbucket";
 // css class, but then using a gloablly registered name to load. The documentation
 // is mostly reading npm:gdrive-appdata and hoping it's accurate.
 
-interface IFilenameMap {
+interface IStringMap {
   [key: string]: string;
 }
 
 class GoogleManager {
   private GoogleAuth?: gapi.auth2.GoogleAuth;
-  private fileIds: IFilenameMap = {};
+  private fileIds: IStringMap = {};
   private clientId: string = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
   private loadBucket: (bucketString: string) => void;
 
@@ -39,6 +40,7 @@ class GoogleManager {
       gapi.load("auth2", () => {
         gapi.load("client", () => {
           gapi.client.load("drive", "v3", initGapi);
+
         });
       });
     };
@@ -47,6 +49,7 @@ class GoogleManager {
       gapi.auth2.getAuthInstance().then((auth) => {
         self.GoogleAuth = auth;
         self.load();
+        Undoable.setSave(this.save);
       }, (err) => {
         alert(JSON.stringify(err));
         throw err;
@@ -54,9 +57,43 @@ class GoogleManager {
     };
   }
 
-  public save = async (data: Bucket) => {
+  public save = async () => {
     if (this.GoogleAuth) {
-      // gapi.client.drive.files.;
+      const bucketNames = Wordbucket.getBuckets().map((bucket: Bucket) => bucket.title);
+      const data: IStringMap = {};
+      const remove: string[] = [];
+      const add: string[] = [];
+      console.log(`start fileIds: ${JSON.stringify(Object.keys(this.fileIds))}`);
+
+      for (const bucketName of bucketNames) {
+        data[bucketName + ".json"] = Wordbucket.serialise(bucketName);
+        if (!this.fileIds[bucketName + ".json"]) {
+          add.push(bucketName + ".json");
+        }
+      }
+
+      console.log(data);
+      for (const oldFile of Object.keys(this.fileIds)) {
+        if (!data[oldFile]) {
+          remove.push(oldFile);
+        }
+      }
+
+      const promises = add.map((fileName) => this.create(fileName));
+      Promise.all(promises).then(() => {
+        for (const file of Object.keys(data)) {
+          this.saveFile(this.fileIds[file], data[file]);
+        }
+      });
+
+      for (const fileName of remove) {
+        this.delete(this.fileIds[fileName]);
+        delete this.fileIds[fileName];
+      }
+
+      console.log(`add: ${add}`);
+      console.log(`remove: ${remove}`);
+      console.log(`end fileIds: ${JSON.stringify(this.fileIds)}`);
     }
   }
 
@@ -98,7 +135,8 @@ class GoogleManager {
     }
   }
 
-  private saveFile = async (data: string, id: string) => {
+  private saveFile = async (id: string, data: string) => {
+    console.log("saving");
     return gapi.client.request({
       body: data,
       method: "PATCH",
@@ -107,7 +145,7 @@ class GoogleManager {
     });
   }
 
-  private create = async (fileName: string): Promise<IFilenameMap> => {
+  private create = async (fileName: string): Promise<IStringMap> => {
     console.log("create function");
     return gapi.client.drive.files.create({
       fields: "id",
@@ -123,7 +161,14 @@ class GoogleManager {
     });
   }
 
-  private getFileIds = async (): Promise<IFilenameMap> => {
+  private delete = async (fileId: string): Promise<any> => {
+    console.log("delete function");
+    return gapi.client.drive.files.delete({
+      fileId,
+    });
+  }
+
+  private getFileIds = async (): Promise<IStringMap> => {
     console.log("getFileIds function");
     return gapi.client.drive.files.list({
       fields: "files(name, id)",
@@ -134,7 +179,7 @@ class GoogleManager {
         && response.result.files
         && response.result.files.length > 0
       ) {
-        const newMap: IFilenameMap = {};
+        const newMap: IStringMap = {};
         console.log(response);
         response.result.files.forEach(
           (file) => {

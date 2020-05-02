@@ -7,11 +7,6 @@ interface IUndoableProps {
 }
 
 export class Undoable {
-  public static wordbucket: typeof Wordbucket;
-  public static setRoot = (root: typeof Wordbucket) => {
-    Undoable.wordbucket = root;
-  }
-
   public static undo = () => {
     if (Undoable.undoQueue.length > 0) {
       const memo = Undoable.undoQueue.pop();
@@ -20,6 +15,7 @@ export class Undoable {
         Undoable.redoQueue.push(memo);
       }
     }
+    Undoable.startSave();
   }
 
   public static redo = () => {
@@ -30,10 +26,26 @@ export class Undoable {
         Undoable.undoQueue.push(memo);
       }
     }
+    Undoable.startSave();
+  }
+
+  public static setSave(save: () => void) {
+    Undoable.save = save;
   }
 
   private static undoQueue: Undoable[] = [];
   private static redoQueue: Undoable[] = [];
+  private static save: () => void;
+  private static debounce: NodeJS.Timeout;
+  private static debounceTime: 15000;
+
+  private static startSave() {
+    if (Undoable.debounce) {
+      clearTimeout(Undoable.debounce);
+    }
+    Undoable.debounce = setTimeout(Undoable.save, Undoable.debounceTime);
+  }
+
   public undo: () => void;
   public redo: () => void;
   public dispatch: () => void;
@@ -46,6 +58,7 @@ export class Undoable {
     Undoable.undoQueue.push(this);
     this.redo();
     Undoable.redoQueue = [];
+    Undoable.startSave();
   }
 }
 
