@@ -18,8 +18,7 @@ interface IWordEditProps {
 }
 
 class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
-  private wordsDebounce: any;
-  private weightDebounce: any;
+  private updateDebounce: any;
   private word: Word|undefined;
   private bucket: Bucket;
   private navigate: () => void;
@@ -70,15 +69,15 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private weightChange(event: any) {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({weight: event.target.value});
-    clearInterval(this.weightDebounce);
-    this.weightDebounce = setTimeout(doUpdate, this.debounceLength);
+    clearInterval(this.updateDebounce);
+    this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
   }
 
   private wordChange(event: any) {
     const doUpdate = this.doUpdate.bind(this);
     this.setState({words: event.target.value});
-    clearInterval(this.wordsDebounce);
-    this.wordsDebounce = setTimeout(doUpdate, this.debounceLength);
+    clearInterval(this.updateDebounce);
+    this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
   }
 
   private updateWord() {
