@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.609c89a9.chunk.css",
-    "main.js": "/static/js/main.48e4ccfd.chunk.js",
-    "runtime-main.js": "/static/js/runtime-main.cc827bad.js",
-    "static/css/2.0e433876.chunk.css": "/static/css/2.0e433876.chunk.css",
-    "static/js/2.9d66de9d.chunk.js": "/static/js/2.9d66de9d.chunk.js",
-    "index.html": "/index.html",
-    "precache-manifest.409cd81764be533a3c572c1e846ebc86.js": "/precache-manifest.409cd81764be533a3c572c1e846ebc86.js",
-    "service-worker.js": "/service-worker.js",
-    "static/js/2.9d66de9d.chunk.js.LICENSE.txt": "/static/js/2.9d66de9d.chunk.js.LICENSE.txt",
-    "static/media/WordEdit.scss": "/static/media/delete-page.590dc343.svg",
-    "static/media/Folder.scss": "/static/media/add.c6144ed4.svg",
-    "static/media/chrome.scss": "/static/media/role-game.6a0c831b.svg"
+    "main.css": "/wordbucket-fe/static/css/main.69260e7d.chunk.css",
+    "main.js": "/wordbucket-fe/static/js/main.b68c7e5b.chunk.js",
+    "runtime-main.js": "/wordbucket-fe/static/js/runtime-main.42190357.js",
+    "static/css/2.0e433876.chunk.css": "/wordbucket-fe/static/css/2.0e433876.chunk.css",
+    "static/js/2.9d66de9d.chunk.js": "/wordbucket-fe/static/js/2.9d66de9d.chunk.js",
+    "index.html": "/wordbucket-fe/index.html",
+    "precache-manifest.94e5516332aa161c3b17648026ba3c7b.js": "/wordbucket-fe/precache-manifest.94e5516332aa161c3b17648026ba3c7b.js",
+    "service-worker.js": "/wordbucket-fe/service-worker.js",
+    "static/js/2.9d66de9d.chunk.js.LICENSE.txt": "/wordbucket-fe/static/js/2.9d66de9d.chunk.js.LICENSE.txt",
+    "static/media/WordEdit.scss": "/wordbucket-fe/static/media/delete-page.590dc343.svg",
+    "static/media/Folder.scss": "/wordbucket-fe/static/media/add.c6144ed4.svg",
+    "static/media/chrome.scss": "/wordbucket-fe/static/media/role-game.6a0c831b.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.cc827bad.js",
+    "static/js/runtime-main.42190357.js",
     "static/css/2.0e433876.chunk.css",
     "static/js/2.9d66de9d.chunk.js",
-    "static/css/main.609c89a9.chunk.css",
-    "static/js/main.48e4ccfd.chunk.js"
+    "static/css/main.69260e7d.chunk.css",
+    "static/js/main.b68c7e5b.chunk.js"
   ]
 }
