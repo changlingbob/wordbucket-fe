@@ -39,7 +39,7 @@ class Controls extends React.Component<any, IControlsState> {
         render = {(state: IApplicationState) => {
           const doExport = (ev: any) => {
             this.setState({
-              content: Wordbucket.serialise(),
+              content: Wordbucket.serialise(state.path),
               doneFunc: this.clearPanel,
               doneString: "OK",
               showPanel: true,
