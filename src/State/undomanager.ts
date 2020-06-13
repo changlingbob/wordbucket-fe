@@ -1,7 +1,7 @@
 import Wordbucket, { Bucket, Word } from "wordbucket";
 
 interface IUndoableProps {
-  dispatch: () => void;
+  dispatch?: () => void;
   redo: () => void;
   undo: () => void;
 }
@@ -48,11 +48,11 @@ export class Undoable {
 
   public undo: () => void;
   public redo: () => void;
-  public dispatch: () => void;
+  public dispatch?: () => void;
 
   constructor(memo: IUndoableProps) {
-    this.undo = () => {memo.undo(); memo.dispatch(); };
-    this.redo = () => {memo.redo(); memo.dispatch(); };
+    this.undo = () => {memo.undo(); if (memo.dispatch) {memo.dispatch(); }};
+    this.redo = () => {memo.redo(); if (memo.dispatch) {memo.dispatch(); }};
     this.dispatch = memo.dispatch;
 
     Undoable.undoQueue.push(this);
@@ -64,7 +64,7 @@ export class Undoable {
 
 // Words
 
-export function updateWord(word: Word, words: string, weight: number, dispatch: () => void) {
+export function updateWord(word: Word, words: string, weight: number, dispatch?: () => void) {
   const currentState = {words: word.words, weight: word.weight};
   new Undoable({
     dispatch,
@@ -73,7 +73,7 @@ export function updateWord(word: Word, words: string, weight: number, dispatch: 
   });
 }
 
-export function removeWord(word: Word, bucket: Bucket, dispatch: () => void) {
+export function removeWord(word: Word, bucket: Bucket, dispatch?: () => void) {
   new Undoable({
     dispatch,
     redo: () => bucket.remove(word),
@@ -81,7 +81,7 @@ export function removeWord(word: Word, bucket: Bucket, dispatch: () => void) {
   });
 }
 
-export function addWord(word: Word, bucket: Bucket, dispatch: () => void) {
+export function addWord(word: Word, bucket: Bucket, dispatch?: () => void) {
   new Undoable({
     dispatch,
     redo: () => bucket.add(word.words, word.weight),

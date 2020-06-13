@@ -97,9 +97,9 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   private doUpdate() {
     if (!this.word && this.state.words && this.state.weight) {
       this.word = new Word(this.state.words, +this.state.weight);
-      addWord(this.word, this.bucket, this.navigate);
+      addWord(this.word, this.bucket);
     } else if (this.word) {
-      updateWord(this.word, this.state.words, +this.state.weight, this.navigate);
+      updateWord(this.word, this.state.words, +this.state.weight);
     }
   }
 }
