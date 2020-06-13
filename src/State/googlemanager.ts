@@ -51,7 +51,8 @@ class GoogleManager {
         self.load();
         Undoable.setSave(this.save);
       }, (err) => {
-        alert(JSON.stringify(err));
+        // tslint:disable-next-line: no-console
+        console.error(JSON.stringify(err));
         throw err;
       });
     };
@@ -95,6 +96,8 @@ class GoogleManager {
   public load = async () => {
     this.loadFiles().then((files: string[]) => {
       files.forEach(this.loadBucket);
+    }, () => {
+      this.loadBucket("");
     });
   }
 
