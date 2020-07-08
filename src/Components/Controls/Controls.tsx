@@ -11,6 +11,9 @@ interface IControlsState {
   doneString: string;
   showPanel: boolean;
 }
+
+const loadingPrompt = "Replace this with serialised bucket data to load it into the engine";
+
 class Controls extends React.Component<any, IControlsState> {
   public constructor(props: any) {
     super(props);
@@ -41,6 +44,15 @@ class Controls extends React.Component<any, IControlsState> {
             this.setState({
               content: Wordbucket.serialise(state.path),
               doneFunc: this.clearPanel,
+              doneString: "OK",
+              showPanel: true,
+            });
+          };
+
+          const doImport = (ev: any) => {
+            this.setState({
+              content: loadingPrompt,
+              doneFunc: this.loadBucket,
               doneString: "OK",
               showPanel: true,
             });
@@ -80,6 +92,7 @@ class Controls extends React.Component<any, IControlsState> {
                   >Redo</div>
                 <div
                   className="import button"
+                  onClick={doImport}
                 >
                   Import
                 </div>
@@ -106,6 +119,15 @@ class Controls extends React.Component<any, IControlsState> {
   }
 
   private clearPanel = () => {
+    this.setState({
+      showPanel: false,
+    });
+  }
+
+  private loadBucket = (details?: string) => {
+    if (details && details !== loadingPrompt) {
+      Wordbucket.deserialise(details);
+    }
     this.setState({
       showPanel: false,
     });
