@@ -87,6 +87,7 @@ class GoogleManager {
       });
 
       const newFiles: IFileData[] = await Promise.all(add.map(createFile));
+      newFiles.forEach((file) => file.data = data[file.fileName]);
       await Promise.all(remove.map(deleteFile));
 
       this.files = this.files.filter((file) => remove.filter((removal) => removal.fileId === file.fileId).length > 0);
