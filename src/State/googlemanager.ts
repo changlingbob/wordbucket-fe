@@ -1,4 +1,5 @@
 import Wordbucket, { Bucket } from "wordbucket";
+import { createFile, deleteFile, getFileIds, loadFile, saveFile} from "./fileHelper";
 import { Undoable } from "./undomanager";
 
 // Figuring out how do to this was a pain. It critically doesn't use an NPM module
@@ -7,13 +8,19 @@ import { Undoable } from "./undomanager";
 // css class, but then using a gloablly registered name to load. The documentation
 // is mostly reading npm:gdrive-appdata and hoping it's accurate.
 
-interface IStringMap {
+interface IFileMap {
   [key: string]: string;
+}
+
+export interface IFileData {
+  fileId: string;
+  fileName: string;
+  data?: string;
 }
 
 class GoogleManager {
   private GoogleAuth?: gapi.auth2.GoogleAuth;
-  private fileIds: IStringMap = {};
+  private files: IFileData[] = [];
   private clientId: string = "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
   private loadBucket: (bucketString: string) => void;
 
@@ -61,126 +68,43 @@ class GoogleManager {
   public save = async () => {
     if (this.GoogleAuth) {
       const bucketNames = Wordbucket.getBuckets().map((bucket: Bucket) => bucket.title);
-      const data: IStringMap = {};
-      const remove: string[] = [];
+      const data: IFileMap = {};
+      const remove: IFileData[] = [];
       const add: string[] = [];
 
       for (const bucketName of bucketNames) {
-        data[bucketName + ".json"] = Wordbucket.serialise(bucketName);
-        if (!this.fileIds[bucketName + ".json"]) {
-          add.push(bucketName + ".json");
+        const fileName = bucketName + ".json";
+        data[fileName] = Wordbucket.serialise(bucketName);
+        if (this.files.filter((file) => file.fileName === fileName).length === 0) {
+          add.push(fileName);
         }
       }
 
-      for (const oldFile of Object.keys(this.fileIds)) {
-        if (!data[oldFile]) {
-          remove.push(oldFile);
-        }
-      }
-
-      const promises = add.map((fileName) => this.create(fileName));
-      Promise.all(promises).then(() => {
-        for (const file of Object.keys(data)) {
-          this.saveFile(this.fileIds[file], data[file]);
+      this.files.forEach((file) => {
+        if (!data[file.fileName]) {
+          remove.push(file);
         }
       });
 
-      for (const fileName of remove) {
-        this.delete(this.fileIds[fileName]);
-        delete this.fileIds[fileName];
-      }
+      const newFiles: IFileData[] = await Promise.all(add.map(createFile));
+      await Promise.all(remove.map(deleteFile));
 
+      this.files = this.files.filter((file) => remove.filter((removal) => removal.fileId === file.fileId).length > 0);
+      this.files = this.files.concat(newFiles);
+      await Promise.all(this.files.map(saveFile));
     }
   }
 
   public load = async () => {
-    this.loadFiles().then((files: string[]) => {
-      files.forEach(this.loadBucket);
-    }, () => {
+    try {
+      const fileIds = await getFileIds();
+      const data = await Promise.all(fileIds.map(loadFile));
+      data.forEach((file) => file.data && this.loadBucket(file.data));
+      this.files = data;
+
+    } catch (e) {
       this.loadBucket("");
-    });
-  }
-
-  private loadFile = async (fileName: string) => {
-    return gapi.client.drive.files.get({
-      alt: "media",
-      fileId: this.fileIds[fileName],
-    }).then((res) => {
-      return res;
-    });
-  }
-
-  private loadFiles = async (): Promise<string[]> => {
-    if (Object.keys(this.fileIds).length > 0) {
-      return Promise.all(
-        Object.keys(this.fileIds).map(this.loadFile),
-      ).then((files) => {
-        return files.map((file) => file.body);
-      });
-    } else {
-      return this.getFileIds().then((ids) => {
-          if (Object.keys(ids).length > 0) {
-            return this.loadFiles();
-          } else {
-            return [];
-          }
-        });
     }
-  }
-
-  private saveFile = async (id: string, data: string) => {
-    return gapi.client.request({
-      body: data,
-      method: "PATCH",
-      params: { uploadType: "media" },
-      path: `/upload/drive/v3/files/${id}`,
-    });
-  }
-
-  private create = async (fileName: string): Promise<IStringMap> => {
-    return gapi.client.drive.files.create({
-      fields: "id",
-      resource: { name: fileName, parents: ["appDataFolder"] },
-    }).then((response) => {
-      if (response
-        && response.result
-        && response.result.id
-      ) {
-        this.fileIds[fileName] = response.result.id;
-      }
-      return this.fileIds;
-    });
-  }
-
-  private delete = async (fileId: string): Promise<any> => {
-    return gapi.client.drive.files.delete({
-      fileId,
-    });
-  }
-
-  private getFileIds = async (): Promise<IStringMap> => {
-    return gapi.client.drive.files.list({
-      fields: "files(name, id)",
-      spaces: "appDataFolder",
-    }).then((response) => {
-      if (response
-        && response.result
-        && response.result.files
-        && response.result.files.length > 0
-      ) {
-        const newMap: IStringMap = {};
-        response.result.files.forEach(
-          (file) => {
-            if (file.name && file.id) {
-              newMap[file.name] = file.id;
-            }
-          },
-        );
-
-        this.fileIds = newMap;
-      }
-      return this.fileIds;
-    });
   }
 }
 

@@ -16,6 +16,8 @@ const StateContext = React.createContext({} as IApplicationState);
 export class StateProvider extends React.Component {
   public state: IApplicationState;
 
+  private loadCount = 0;
+
   constructor(props: any) {
     super(props);
 
@@ -41,8 +43,8 @@ export class StateProvider extends React.Component {
       </StateContext.Provider>
     );
   }
-
   public load = (bucketString: string) => {
+    this.loadCount++;
     try {
       if (bucketString.length === 0) {
         // tslint:disable-next-line: no-console
