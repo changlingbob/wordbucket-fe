@@ -17,9 +17,8 @@ const Panel = (props: IPanelProps) => {
     <div className="floating-panel">
       <textarea
         ref={(el) => inputRef = el}
-      >
-        {props.content}
-      </textarea>
+        defaultValue={props.content}
+      />
       <div
         className="button"
         onClick={doneClicked}>
