@@ -30,20 +30,33 @@ export class Undoable {
   }
 
   public static setSave(save: () => void) {
+    window.addEventListener("beforeunload", (e) => {
+      if (Undoable.saveOutstanding) {
+        Undoable.save();
+        e.preventDefault();
+        e.returnValue = "save in progress";
+      }
+    });
     Undoable.save = save;
   }
 
+  private static saveOutstanding: boolean = false;
+  private static save: () => void;
+
   private static undoQueue: Undoable[] = [];
   private static redoQueue: Undoable[] = [];
-  private static save: () => void;
   private static debounce: NodeJS.Timeout;
   private static debounceTime: number = 5000;
 
   private static startSave() {
+    Undoable.saveOutstanding = true;
     if (Undoable.debounce) {
       clearTimeout(Undoable.debounce);
     }
-    Undoable.debounce = setTimeout(Undoable.save, Undoable.debounceTime);
+    Undoable.debounce = setTimeout(() => {
+      Undoable.saveOutstanding = false;
+      Undoable.save();
+    }, Undoable.debounceTime);
   }
 
   public undo: () => void;
