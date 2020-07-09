@@ -37,7 +37,7 @@ export class Undoable {
   private static redoQueue: Undoable[] = [];
   private static save: () => void;
   private static debounce: NodeJS.Timeout;
-  private static debounceTime: 15000;
+  private static debounceTime: number = 5000;
 
   private static startSave() {
     if (Undoable.debounce) {

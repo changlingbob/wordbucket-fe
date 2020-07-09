@@ -70,13 +70,13 @@ class GoogleManager {
       const bucketNames = Wordbucket.getBuckets().map((bucket: Bucket) => bucket.title);
       const data: IFileMap = {};
       const remove: IFileData[] = [];
-      const add: string[] = [];
+      const add: IFileData[] = [];
 
       for (const bucketName of bucketNames) {
         const fileName = bucketName + ".json";
         data[fileName] = Wordbucket.serialise(bucketName);
         if (this.files.filter((file) => file.fileName === fileName).length === 0) {
-          add.push(fileName);
+          add.push(await createFile(fileName));
         }
       }
 
@@ -86,12 +86,11 @@ class GoogleManager {
         }
       });
 
-      const newFiles: IFileData[] = await Promise.all(add.map(createFile));
-      newFiles.forEach((file) => file.data = data[file.fileName]);
-      await Promise.all(remove.map(deleteFile));
+      this.files = this.files.filter((file) => remove.filter((removal) => removal.fileId === file.fileId).length === 0);
+      this.files.forEach((file) => file.data = data[file.fileName]);
+      this.files = this.files.concat(add);
 
-      this.files = this.files.filter((file) => remove.filter((removal) => removal.fileId === file.fileId).length > 0);
-      this.files = this.files.concat(newFiles);
+      await Promise.all(remove.map(deleteFile));
       await Promise.all(this.files.map(saveFile));
     }
   }

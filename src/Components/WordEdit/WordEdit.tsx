@@ -35,7 +35,6 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     this.bucket = props.bucket;
     this.navigate = props.navigate;
 
-    this.forceChange = this.forceChange.bind(this);
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
     this.updateWord = this.updateWord.bind(this);
@@ -52,14 +51,14 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
         <input
           className="weight"
           value={this.state.weight}
-          onChange={this.weightChange}
-          onBlur={this.forceChange}
+          onChange={this.weightChange(false)}
+          onBlur={this.weightChange(true)}
         />
         <input
           className="words"
           value={this.state.words}
-          onChange={this.wordChange}
-          onBlur={this.forceChange}
+          onChange={this.wordChange(false)}
+          onBlur={this.wordChange(true)}
         />
         <div
           className="button"
@@ -69,24 +68,34 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     );
   }
 
-  private weightChange(event: any) {
-    const doUpdate = this.doUpdate.bind(this);
-    this.setState({weight: event.target.value});
-    clearInterval(this.updateDebounce);
-    this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
+  private weightChange(immediate: boolean) {
+    return (event: any) => {
+      if (this.word && this.word.weight !== event.target.value) {
+        const doUpdate = this.doUpdate.bind(this);
+        this.setState({weight: event.target.value});
+        if (immediate) {
+          doUpdate();
+        } else {
+          clearInterval(this.updateDebounce);
+          this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
+        }
+      }
+    };
   }
 
-  private wordChange(event: any) {
-    const doUpdate = this.doUpdate.bind(this);
-    this.setState({words: event.target.value});
-    clearInterval(this.updateDebounce);
-    this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
-  }
-
-  private forceChange(event: any) {
-    clearInterval(this.updateDebounce);
-    this.setState({words: event.target.value});
-    this.doUpdate();
+  private wordChange(immediate: boolean) {
+    return (event: any) => {
+      if (this.word && this.word.words !== event.target.value) {
+        const doUpdate = this.doUpdate.bind(this);
+        this.setState({words: event.target.value});
+        if (immediate) {
+          doUpdate();
+        } else {
+          clearInterval(this.updateDebounce);
+          this.updateDebounce = setTimeout(doUpdate, this.debounceLength);
+        }
+      }
+    };
   }
 
   private updateWord() {

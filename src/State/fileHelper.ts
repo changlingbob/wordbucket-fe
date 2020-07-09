@@ -58,7 +58,6 @@ export const getFileIds = async (): Promise<IFileData[]> => {
   ) {
     const newFiles: IFileData[] = [];
     response.result.files.forEach((file) => {
-      console.log(file.name);
       if (file.name && file.id) {
         newFiles.push({fileId: file.id, fileName: file.name});
       }
