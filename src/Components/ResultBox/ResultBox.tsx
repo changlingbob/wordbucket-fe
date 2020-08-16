@@ -8,16 +8,27 @@ class ResultBox extends React.Component {
   public render() {
     return (
       <BucketState render={(state: IApplicationState) => {
+        const generate = (): string => {
+          try {
+            return Wordbucket.generate(state.path);
+          } catch (e) {
+            // tslint:disable-next-line: no-console
+            console.error(e);
+            return "Error generating string";
+          }
+        };
+
         if (state.path === "" || !!!Wordbucket.check(state.path)) {
           return <div className="result-title">
             Select a table to start.
           </div>;
         }
+
         return (
           <>
             <div className="result-title">{state.path}</div>
             <div className="result-container">
-              <div className="results">{Wordbucket.generate(state.path)}</div>
+              <div className="results">{generate()}</div>
               <div
                 className="roller"
                 onClick={(ev) => this.forceUpdate()}
