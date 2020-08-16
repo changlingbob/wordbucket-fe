@@ -37,7 +37,7 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
 
     this.wordChange = this.wordChange.bind(this);
     this.weightChange = this.weightChange.bind(this);
-    this.updateWord = this.updateWord.bind(this);
+    this.removeWord = this.removeWord.bind(this);
   }
 
   public render() {
@@ -62,7 +62,7 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
         />
         <div
           className="button"
-          onClick={this.updateWord}
+          onClick={this.removeWord}
         />
       </div>
     );
@@ -100,7 +100,7 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
     };
   }
 
-  private updateWord() {
+  private removeWord() {
     if (this.state.create) {
       this.setState({create: false});
     } else if (this.word) {
