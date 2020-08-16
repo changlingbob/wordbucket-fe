@@ -50,13 +50,13 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
       >
         <input
           className="weight"
-          value={this.state.weight}
+          defaultValue={this.state.weight}
           onChange={this.weightChange(false)}
           onBlur={this.weightChange(true)}
         />
         <input
           className="words"
-          value={this.state.words}
+          defaultValue={this.state.words}
           onChange={this.wordChange(false)}
           onBlur={this.wordChange(true)}
         />
@@ -70,10 +70,11 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
 
   private weightChange(immediate: boolean) {
     return (event: any) => {
-      if (this.word && this.word.weight !== event.target.value) {
+      if (this.word?.weight !== event.target.value) {
         const doUpdate = this.doUpdate.bind(this);
         this.setState({weight: event.target.value});
         if (immediate) {
+          clearInterval(this.updateDebounce);
           doUpdate();
         } else {
           clearInterval(this.updateDebounce);
@@ -85,10 +86,11 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
 
   private wordChange(immediate: boolean) {
     return (event: any) => {
-      if (this.word && this.word.words !== event.target.value) {
+      if (this.word?.words !== event.target.value) {
         const doUpdate = this.doUpdate.bind(this);
         this.setState({words: event.target.value});
         if (immediate) {
+          clearInterval(this.updateDebounce);
           doUpdate();
         } else {
           clearInterval(this.updateDebounce);
@@ -113,9 +115,10 @@ class WordEdit extends React.Component<IWordEditProps, IWordEditState> {
   }
 
   private doUpdate() {
-    if (!this.word && this.state.weight) {
+    if (!this.word) {
       this.word = new Word(this.state.words || "", +this.state.weight);
-      addWord(this.word, this.bucket);
+      addWord(this.word, this.bucket, this.navigate);
+      this.setState({create: false});
     } else if (this.word) {
       updateWord(this.word, this.state.words, +this.state.weight);
     }
