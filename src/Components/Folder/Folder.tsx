@@ -48,7 +48,6 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
         .filter((bucket) => {
           return (
             bucket.title.length > this.props.bucket.title.length &&
-            // bucket.title.slice(this.props.bucket.title.length).match(/\./) &&
             bucket.title.slice(0, this.props.bucket.title.length) ===
               this.props.bucket.title &&
             !bucket.title.slice(this.props.bucket.title.length + 1).match(/\./)
