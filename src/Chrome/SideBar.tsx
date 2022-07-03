@@ -1,5 +1,5 @@
 import React from "react";
-import Wordbucket from "wordbucket";
+import { WordManager } from "wordbucket";
 import Creator from "../Components/Folder/Creator";
 import Folder from "../Components/Folder/Folder";
 import { BucketState, IApplicationState } from "../State/state";
@@ -37,7 +37,7 @@ class SideBar extends React.Component<any, ISideBarState> {
     function cancelDrag(ev: any) {
       document.body.removeEventListener("pointermove", dragMove);
       document.body.removeEventListener("pointerleave", cancelDrag);
-      self.setState({resizeMode: false});
+      self.setState({ resizeMode: false });
     }
 
     function dragMove(this: HTMLElement, ev: PointerEvent) {
@@ -51,33 +51,37 @@ class SideBar extends React.Component<any, ISideBarState> {
 
     return (
       <BucketState
-        render={(state: IApplicationState) => {
-          const bucketElements = Wordbucket.getBuckets().map((bucket) => {
-            return (
-              <Folder
-                bucket={bucket}
-                create={false}
-                collapsed={false}
-                inPath={state.inPath}
-                path={state.path}
-                parentName=""
-              />
-            );
-          });
+        render={(state: IApplicationState | null) => {
+          const bucketElements = state
+            ? WordManager.getBuckets()
+                .filter((bucket) => {
+                  return !bucket.title.match(/\./);
+                })
+                .map((bucket) => {
+                  return (
+                    <Folder
+                      bucket={bucket}
+                      create={false}
+                      collapsed={false}
+                      inPath={state.inPath}
+                      path={state.path}
+                      parentName=""
+                    />
+                  );
+                })
+            : [];
 
-          bucketElements.push(<Creator
-            parentName=""
-          />);
+          bucketElements.push(<Creator parentName="" />);
 
           const container = (
             <div
-              className ="sidebar"
+              className="sidebar"
               onPointerDown={dragStart}
               onPointerUp={cancelDrag}
-              style={{width: self.state.width}}
-            >{
-              bucketElements
-            }</div>
+              style={{ width: self.state.width }}
+            >
+              {bucketElements}
+            </div>
           );
 
           return container;

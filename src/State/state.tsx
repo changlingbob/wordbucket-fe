@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React, { ReactNode } from "react";
-import Wordbucket, { Bucket } from "wordbucket";
+import { Bucket, WordManager } from "wordbucket";
 import GoogleManager from "./googlemanager";
 
 export interface IApplicationState {
@@ -11,7 +11,7 @@ export interface IApplicationState {
   navigate(path: string): void;
 }
 
-const StateContext = React.createContext({} as IApplicationState);
+const StateContext = React.createContext<IApplicationState | null>(null);
 
 export class StateProvider extends React.Component {
   public state: IApplicationState;
@@ -50,23 +50,25 @@ export class StateProvider extends React.Component {
         // tslint:disable-next-line: no-console
         console.log("No buckets loaded, adding defaults");
         // tslint:disable-next-line max-line-length
-        this.load('{"hex":{"words":[{"words":"You come across ${hex.root}","weight":1}],"children":{"root":{"words":[{"words":"${hex.structure}. ${hex.additional}","weight":1}],"children":{}},"additional":{"words":[{"words":"","weight":5},{"words":"Nearby is ${hex.root}","weight":0.5}],"children":{}},"structure":{"words":[{"words":"${$a, size} number of ${hex.structure.status} statues","weight":1},{"words":"${$a, size.extreme, hex.structure.status} monastry${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} tower${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme} obelisk","weight":1},{"words":"${$a, size.extreme} camp${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} graveyard","weight":1},{"words":"some ${size, hex.structure.status} canals","weight":1},{"words":"${$a, size, hex.structure.status} hovel${hex.structure.occupied}","weight":1}],"children":{"occupied":{"words":[{"words":"","weight":5},{"words":". There are signs of recent occupation","weight":1},{"words":". There are friendly creatures here","weight":1},{"words":". There are neutral creatures here","weight":1},{"words":". There are unfriendly creatures here","weight":1}],"children":{}},"rarelyoccupied":{"words":[{"words":"","weight":5},{"words":"${hex.structure.occupied}","weight":1}],"children":{}},"status":{"words":[{"words":"","weight":2},{"words":"tumbledown","weight":1},{"words":"ruined","weight":1},{"words":"overgrown","weight":1},{"words":"poorly maintained","weight":1},{"words":"neatly maintained","weight":0.5},{"words":"freshly painted","weight":0.1}],"children":{}}}}}},"size":{"words":[{"words":"","weight":5},{"words":"small","weight":2},{"words":"large","weight":2},{"words":"modest","weight":1}],"children":{"extreme":{"words":[{"words":"${size}","weight":5},{"words":"tiny","weight":1},{"words":"enormous","weight":1},{"words":"huge","weight":1}],"children":{}}}}}');
+        this.load(
+          '{"hex":{"words":[{"words":"You come across ${hex.root}","weight":1}],"children":{"root":{"words":[{"words":"${hex.structure}. ${hex.additional}","weight":1}],"children":{}},"additional":{"words":[{"words":"","weight":5},{"words":"Nearby is ${hex.root}","weight":0.5}],"children":{}},"structure":{"words":[{"words":"${$a, size} number of ${hex.structure.status} statues","weight":1},{"words":"${$a, size.extreme, hex.structure.status} monastry${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme, hex.structure.status} tower${hex.structure.occupied}","weight":1},{"words":"${$a, size.extreme} obelisk","weight":1},{"words":"${$a, size.extreme} camp${hex.structure.occupied}","weight":1},{"words":"${$a, size, hex.structure.status} graveyard","weight":1},{"words":"some ${size, hex.structure.status} canals","weight":1},{"words":"${$a, size, hex.structure.status} hovel${hex.structure.occupied}","weight":1}],"children":{"occupied":{"words":[{"words":"","weight":5},{"words":". There are signs of recent occupation","weight":1},{"words":". There are friendly creatures here","weight":1},{"words":". There are neutral creatures here","weight":1},{"words":". There are unfriendly creatures here","weight":1}],"children":{}},"rarelyoccupied":{"words":[{"words":"","weight":5},{"words":"${hex.structure.occupied}","weight":1}],"children":{}},"status":{"words":[{"words":"","weight":2},{"words":"tumbledown","weight":1},{"words":"ruined","weight":1},{"words":"overgrown","weight":1},{"words":"poorly maintained","weight":1},{"words":"neatly maintained","weight":0.5},{"words":"freshly painted","weight":0.1}],"children":{}}}}}},"size":{"words":[{"words":"","weight":5},{"words":"small","weight":2},{"words":"large","weight":2},{"words":"modest","weight":1}],"children":{"extreme":{"words":[{"words":"${size}","weight":5},{"words":"tiny","weight":1},{"words":"enormous","weight":1},{"words":"huge","weight":1}],"children":{}}}}}'
+        );
       } else {
-        Wordbucket.deserialise(bucketString);
+        WordManager.deserialise(bucketString);
       }
     } catch (e) {
       // tslint:disable-next-line: no-console
       console.error(`Error loading buckets: ${e}`);
     }
     this.setState({});
-  }
+  };
 
   public navigate = (bucket?: string) => {
     if (bucket) {
-      this.setState({path: bucket});
+      this.setState({ path: bucket });
       window.history.pushState(null, "", bucketToPathname(bucket || ""));
     }
-  }
+  };
 
   public inPath = (bucket: Bucket) => {
     const bucketArray = bucket.title.split(".");
@@ -82,7 +84,7 @@ export class StateProvider extends React.Component {
     }
 
     return diff <= 1;
-  }
+  };
 }
 
 function pathnameToBucket(path: string): string {
@@ -93,29 +95,30 @@ function bucketToPathname(bucket: string): string {
   return "/" + bucket.replace(/\./g, "/");
 }
 
-export const NavLink = ({ ...props }) =>
+export const NavLink = ({ ...props }) => (
   <StateContext.Consumer>
-    {
-      (State: IApplicationState) => {
-        return <a
+    {(State: IApplicationState | null) => {
+      return (
+        <a
           {...props}
-          className={classNames(
-            props.className,
-            {active: State.path === props.path},
-          )}
+          className={classNames(props.className, {
+            active: State?.path === props.path,
+          })}
           onClick={(e) => {
             props.onClick(e);
-            State.navigate(props.path);
+            State?.navigate(props.path);
             e.preventDefault();
           }}
-        />;
-      }
-    }
-  </StateContext.Consumer>;
+        >
+          {}
+        </a>
+      );
+    }}
+  </StateContext.Consumer>
+);
 
-export const BucketState = ({ render }: {render: (state: IApplicationState) => ReactNode}) =>
-  <StateContext.Consumer>
-    {
-      (state) => render(state)
-    }
-  </StateContext.Consumer>;
+export const BucketState = ({
+  render,
+}: {
+  render: (state: IApplicationState | null) => ReactNode;
+}) => <StateContext.Consumer>{(state) => render(state)}</StateContext.Consumer>;

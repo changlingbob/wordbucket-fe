@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import { Bucket } from "wordbucket";
+import { Bucket, WordManager } from "wordbucket";
 import { NavLink } from "../../State/state";
 import Creator from "./Creator";
 import "./Folder.scss";
@@ -20,7 +20,6 @@ interface IFolderProps {
 }
 
 class Folder extends React.Component<IFolderProps, IFolderState> {
-
   constructor(props: IFolderProps) {
     super(props);
     this.state = {
@@ -30,8 +29,10 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
   }
 
   public componentWillReceiveProps(props: IFolderProps) {
-    if (props.collapsed !== this.state.collapsed ||
-      props.path !== this.state.path) {
+    if (
+      props.collapsed !== this.state.collapsed ||
+      props.path !== this.state.path
+    ) {
       this.setState({
         ...props,
       });
@@ -40,47 +41,70 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
 
   public render() {
     const bucket = this.state.bucket;
-    const children = [];
-    for (const child of bucket.getChildren()) {
-      children.push(<Folder
+
+    const childBuckets = (() => {
+      const children: Bucket[] = [];
+      WordManager.getBuckets()
+        .filter((bucket) => {
+          return (
+            bucket.title.length > this.props.bucket.title.length &&
+            // bucket.title.slice(this.props.bucket.title.length).match(/\./) &&
+            bucket.title.slice(0, this.props.bucket.title.length) ===
+              this.props.bucket.title &&
+            !bucket.title.slice(this.props.bucket.title.length + 1).match(/\./)
+          );
+        })
+        .forEach((bucket) => {
+          children.push(bucket);
+        });
+
+      return children;
+    })();
+
+    const children = childBuckets.map((child) => (
+      <Folder
         bucket={child}
         collapsed={this.state.collapseChildren}
         inPath={this.state.inPath}
         path={this.state.path}
         key={child.title}
         create={false}
-        parentName={this.constructFullName()}
-      />);
-    }
+        parentName={this.props.bucket.title}
+      />
+    ));
+
     if (this.state.create) {
-      children.push(<Creator
-        parentName={this.constructFullName()}
-        parentFolder={this}
-      />);
+      children.push(
+        <Creator parentName={this.props.bucket.title} parentFolder={this} />
+      );
     }
 
     return (
       <div
         className={classNames(
-          {root: bucket.title.length === 0},
-          {folder: bucket.title.length > 0},
-          {collapsed: this.props.collapsed},
-          {focused: this.constructFullName() === this.state.path},
+          { root: bucket.title.length === 0 },
+          { folder: bucket.title.length > 0 },
+          { collapsed: this.props.collapsed },
+          { focused: this.props.bucket.title === this.state.path }
         )}
       >
-        {bucket.getChildren().length > 0 ? <div
-          className="toggle"
-          onClick={() => {
-            this.setState({collapseChildren: !this.state.collapseChildren});
-          }}
+        {childBuckets.length > 0 ? (
+          <div
+            className="toggle"
+            onClick={() => {
+              this.setState({ collapseChildren: !this.state.collapseChildren });
+            }}
           >
-          {this.state.collapseChildren ? "+" : "-"}
-        </div> : ""}
+            {this.state.collapseChildren ? "+" : "-"}
+          </div>
+        ) : (
+          ""
+        )}
         <NavLink
           className="title"
-          path={this.constructFullName()}
+          path={this.props.bucket.title}
           onClick={() => {
-            this.setState({collapseChildren: false});
+            this.setState({ collapseChildren: false });
           }}
         >
           {bucket.title}
@@ -88,23 +112,13 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
         <div
           className="create"
           onClick={() => {
-            this.setState({create: true});
+            this.setState({ create: true });
           }}
         />
-        <div className="children">
-          {children}
-        </div>
+        <div className="children">{children}</div>
       </div>
     );
   }
-
-  private constructFullName(): string {
-    let out = this.state.parentName ? this.state.parentName + "." : "";
-    out += this.state.bucket?.title;
-
-    return out;
-  }
-
 }
 
 export default Folder;

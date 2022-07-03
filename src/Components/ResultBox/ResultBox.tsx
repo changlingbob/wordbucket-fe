@@ -1,5 +1,5 @@
 import React from "react";
-import Wordbucket from "wordbucket";
+import { WordManager } from "wordbucket";
 import { BucketState, IApplicationState } from "../../State/state";
 import "./ResultBox.scss";
 
@@ -7,36 +7,35 @@ import "./ResultBox.scss";
 class ResultBox extends React.Component {
   public render() {
     return (
-      <BucketState render={(state: IApplicationState) => {
-        const generate = (): string => {
-          try {
-            return Wordbucket.generate(state.path);
-          } catch (e) {
-            // tslint:disable-next-line: no-console
-            console.error(e);
-            return "Error generating string";
+      <BucketState
+        render={(state: IApplicationState | null) => {
+          const generate = (): string => {
+            try {
+              return state ? WordManager.generate(state.path) : "";
+            } catch (e) {
+              // tslint:disable-next-line: no-console
+              console.error(e);
+              return "Error generating string";
+            }
+          };
+
+          if (state?.path === "" || !!!WordManager.check(state?.path)) {
+            return <div className="result-title">Select a table to start.</div>;
           }
-        };
 
-        if (state.path === "" || !!!Wordbucket.check(state.path)) {
-          return <div className="result-title">
-            Select a table to start.
-          </div>;
-        }
-
-        return (
-          <>
-            <div className="result-title">{state.path}</div>
-            <div className="result-container">
-              <div className="results">{generate()}</div>
-              <div
-                className="roller"
-                onClick={(ev) => this.forceUpdate()}
-              >Re-roll</div>
-            </div>
-          </>
-        );
-      }}/>
+          return (
+            <>
+              <div className="result-title">{state?.path}</div>
+              <div className="result-container">
+                <div className="results">{generate()}</div>
+                <div className="roller" onClick={(ev) => this.forceUpdate()}>
+                  Re-roll
+                </div>
+              </div>
+            </>
+          );
+        }}
+      />
     );
   }
 }

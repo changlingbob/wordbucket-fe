@@ -24,21 +24,16 @@ class Creator extends React.Component<ICreatorProps> {
   public render() {
     return (
       <div
-          className={classNames(
-            {root: !this.props.parentFolder},
-            {folder: this.props.parentFolder},
-            "new-bucket",
-          )}
-        >
-        <input
-          ref={this.inputRef}
-          className="title"
-        />
-        <div
-          className="create confirm"
-          onClick={this.newBucket}
-        />
-      </div>);
+        className={classNames(
+          { root: !this.props.parentFolder },
+          { folder: this.props.parentFolder },
+          "new-bucket"
+        )}
+      >
+        <input ref={this.inputRef} className="title" />
+        <div className="create confirm" onClick={this.newBucket} />
+      </div>
+    );
   }
 
   private newBucket(event: any) {
@@ -46,9 +41,9 @@ class Creator extends React.Component<ICreatorProps> {
       const parentName = this.parentName || "";
       const newName = this.inputRef.current.value;
 
-      addBucket(newName, parentName, () => {
+      addBucket(newName, () => {
         if (this.props.parentFolder) {
-          this.props.parentFolder.setState({create: false});
+          this.props.parentFolder.setState({ create: false });
         }
       });
     }

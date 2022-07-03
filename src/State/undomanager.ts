@@ -1,4 +1,4 @@
-import Wordbucket, { Bucket, Word } from "wordbucket";
+import { Bucket, Word, WordManager } from "wordbucket";
 
 interface IUndoableProps {
   dispatch?: () => void;
@@ -16,7 +16,7 @@ export class Undoable {
       }
     }
     Undoable.startSave();
-  }
+  };
 
   public static redo = () => {
     if (Undoable.redoQueue.length > 0) {
@@ -27,7 +27,7 @@ export class Undoable {
       }
     }
     Undoable.startSave();
-  }
+  };
 
   public static setSave(save: () => void) {
     window.addEventListener("beforeunload", (e) => {
@@ -64,8 +64,18 @@ export class Undoable {
   public dispatch?: () => void;
 
   constructor(memo: IUndoableProps) {
-    this.undo = () => {memo.undo(); if (memo.dispatch) {memo.dispatch(); }};
-    this.redo = () => {memo.redo(); if (memo.dispatch) {memo.dispatch(); }};
+    this.undo = () => {
+      memo.undo();
+      if (memo.dispatch) {
+        memo.dispatch();
+      }
+    };
+    this.redo = () => {
+      memo.redo();
+      if (memo.dispatch) {
+        memo.dispatch();
+      }
+    };
     this.dispatch = memo.dispatch;
 
     Undoable.undoQueue.push(this);
@@ -77,11 +87,16 @@ export class Undoable {
 
 // Words
 
-export function updateWord(word: Word, words: string, weight: number, dispatch?: () => void) {
-  const currentState = {words: word.words, weight: word.weight};
+export function updateWord(
+  word: Word,
+  words: string,
+  weight: number,
+  dispatch?: () => void
+) {
+  const currentState = { words: word.words, weight: word.weight };
   new Undoable({
     dispatch,
-    redo: () => word.update({words, weight}),
+    redo: () => word.update({ words, weight }),
     undo: () => word.update(currentState),
   });
 }
@@ -104,35 +119,24 @@ export function addWord(word: Word, bucket: Bucket, dispatch?: () => void) {
 
 // Buckets
 
-export function addBucket(bucketName: string, parentName: string, dispatch: () => void) {
-  let attachFunc: (bucket: Bucket) => void;
-  let detachFunc: (bucket: Bucket) => void;
-  if (parentName && Wordbucket.check(parentName)) {
-    const bucket = Wordbucket.fetch(parentName);
-    attachFunc = bucket.attach;
-    detachFunc = bucket.detach;
-  } else {
-    attachFunc = Wordbucket.attach;
-    detachFunc = Wordbucket.detach;
-  }
-
+export function addBucket(bucketName: string, dispatch: () => void) {
   const freshBucket = new Bucket(bucketName);
 
   new Undoable({
     dispatch,
-    redo: () => attachFunc(freshBucket),
+    redo: () => WordManager.attach(freshBucket),
     undo: () => {
-      detachFunc(freshBucket);
+      WordManager.detach(freshBucket);
     },
   });
 }
 
-export function removeBucket(bucket: Bucket, parent: Bucket, dispatch: () => void) {
+export function removeBucket(bucket: Bucket, dispatch: () => void) {
   const bucketBackup = bucket;
 
   new Undoable({
     dispatch,
-    redo: () => parent.detach(bucket),
-    undo: () => parent.attach(bucketBackup),
+    redo: () => WordManager.detach(bucket),
+    undo: () => WordManager.attach(bucketBackup),
   });
 }

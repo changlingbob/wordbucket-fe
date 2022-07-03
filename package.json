@@ -6,13 +6,12 @@
   "dependencies": {
     "@types/classnames": "^2.2.10",
     "classnames": "^2.2.6",
-    "node-sass": "^4.14.1",
     "normalize-scss": "^7.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^5.0.1",
     "typescript": "^3.8.3",
-    "wordbucket": "git+https://github.com/changlingbob/wordbucket.git#master"
+    "wordbucket": "github:changlingbob/wordbucket#refactor"
   },
   "devDependencies": {
     "@types/gapi": "0.0.39",
@@ -22,6 +21,7 @@
     "@types/node": "^10.17.21",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
+    "sass": "^1.53.0",
     "sass-lint": "^1.13.1",
     "tslint": "^5.20.1"
   },
