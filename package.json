@@ -11,7 +11,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "^5.0.1",
     "typescript": "^3.8.3",
-    "wordbucket": "github:changlingbob/wordbucket#refactor"
+    "wordbucket": "github:changlingbob/wordbucket#master"
   },
   "devDependencies": {
     "@types/gapi": "0.0.39",
