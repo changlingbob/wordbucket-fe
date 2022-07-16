@@ -26,11 +26,11 @@ export class StateProvider extends React.Component {
       inPath: this.inPath,
       load: this.load,
       navigate: this.navigate,
-      path: pathnameToBucket(window.location.pathname),
+      path: pathnameToBucket(window.location.hash),
     };
 
     window.onpopstate = () => {
-      this.setState({ path: pathnameToBucket(window.location.pathname) });
+      this.setState({ path: pathnameToBucket(window.location.hash) });
     };
 
     this.load.bind(this);
@@ -60,7 +60,7 @@ export class StateProvider extends React.Component {
       // tslint:disable-next-line: no-console
       console.error(`Error loading buckets: ${e}`);
     }
-    this.setState({});
+    this.setState({ path: pathnameToBucket(window.location.hash) });
   };
 
   public navigate = (bucket?: string) => {
@@ -88,11 +88,11 @@ export class StateProvider extends React.Component {
 }
 
 function pathnameToBucket(path: string): string {
-  return path.replace(/\//g, ".").slice(1);
+  return path.replace(/\//g, ".").slice(2);
 }
 
 function bucketToPathname(bucket: string): string {
-  return "/" + bucket.replace(/\./g, "/");
+  return "#/" + bucket.replace(/\./g, "/");
 }
 
 export const NavLink = ({ ...props }) => (
