@@ -44,7 +44,7 @@ class Controls extends React.Component<any, IControlsState> {
         render={(state: IApplicationState | null) => {
           const doExport = (ev: any) => {
             this.setState({
-              content: WordManager.serialise(state?.path),
+              content: WordManager.serialise(state?.path || ""),
               doneFunc: this.clearPanel,
               doneString: "OK",
               showPanel: true,

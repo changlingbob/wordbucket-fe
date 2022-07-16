@@ -44,7 +44,8 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
 
     const childBuckets = (() => {
       const children: Bucket[] = [];
-      WordManager.getBuckets()
+      const allBuckets = WordManager.getBuckets();
+      allBuckets
         .filter((bucket) => {
           return (
             bucket.title.length > this.props.bucket.title.length &&
@@ -53,6 +54,24 @@ class Folder extends React.Component<IFolderProps, IFolderState> {
             !bucket.title.slice(this.props.bucket.title.length + 1).match(/\./)
           );
         })
+        .forEach((bucket) => {
+          children.push(bucket);
+        });
+
+      allBuckets
+        .filter(
+          (bucket) =>
+            bucket.title.length > this.props.bucket.title.length &&
+            bucket.title.slice(0, this.props.bucket.title.length) ===
+              this.props.bucket.title &&
+            bucket.title
+              .slice(this.props.bucket.title.length + 1)
+              .match(/\./) &&
+            children.filter(
+              (child) =>
+                bucket.title.slice(0, child.title.length) === child.title
+            ).length === 0
+        )
         .forEach((bucket) => {
           children.push(bucket);
         });

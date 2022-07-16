@@ -76,16 +76,20 @@ class GoogleManager {
 
   public save = async () => {
     if (this.GoogleAuth) {
-      const bucketNames = WordManager.getBuckets().map(
+      const bucketNames: string[] = WordManager.getBuckets().map(
         (bucket: Bucket) => bucket.title
       );
       const data: IFileMap = {};
       const remove: IFileData[] = [];
       const add: IFileData[] = [];
 
-      for (const bucketName of bucketNames) {
+      for (const bucketName of bucketNames.filter(
+        (name) => name.indexOf(".") === -1
+      )) {
         const fileName = bucketName + ".json";
-        data[fileName] = WordManager.serialise(bucketName);
+        data[fileName] = WordManager.serialise(
+          ...bucketNames.filter((bucket) => bucket.indexOf(bucketName) === 0)
+        );
         if (
           this.files.filter((file) => file.fileName === fileName).length === 0
         ) {
