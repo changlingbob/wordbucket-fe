@@ -38,8 +38,9 @@ class Creator extends React.Component<ICreatorProps> {
 
   private newBucket(event: any) {
     if (this.inputRef.current) {
-      const parentName = this.parentName || "";
-      const newName = this.inputRef.current.value;
+      const newName = `${this.parentName ? `${this.parentName}.` : ""}${
+        this.inputRef.current.value
+      }`;
 
       addBucket(newName, () => {
         if (this.props.parentFolder) {
