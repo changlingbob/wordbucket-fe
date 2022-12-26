@@ -43,8 +43,16 @@ class Controls extends React.Component<any, IControlsState> {
       <BucketState
         render={(state: IApplicationState | null) => {
           const doExport = (ev: any) => {
+            const bucketRoot = state?.path.split(".")[0] || "";
+            const bucketNames = WordManager.getBuckets().map(
+              (bucket) => bucket.title
+            );
             this.setState({
-              content: WordManager.serialise(state?.path || ""),
+              content: WordManager.serialise(
+                ...bucketNames.filter(
+                  (bucket) => bucket.indexOf(bucketRoot) === 0
+                )
+              ),
               doneFunc: this.clearPanel,
               doneString: "OK",
               showPanel: true,
