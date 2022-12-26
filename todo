@@ -1,9 +1,9 @@
-x save out json +import
-load in json +import
-refactor core bucket code +import
 merge logic +import
-load from gdrive +import
 update starting data
 logout option
 feature documentation
 better UX for adding a new root bucket
+variable setter
+table setter
+RNG seed
+output tester with dropdowns and markers
