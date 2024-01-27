@@ -1,17 +1,18 @@
-import React from "react";
-import "./App.scss";
-import Frame from "./Chrome/Frame";
-import Content from "./Content/Content";
-import { StateProvider } from "./State/state";
+import * as React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-function App() {
-  return (
-    <StateProvider>
-      <Frame>
-        <Content />
-      </Frame>
-    </StateProvider>
-  );
-}
+import { Home } from '@pages/home';
 
-export default App;
+import { AppProvider } from './appProvider';
+
+import './styles/theme.scss';
+
+export const App: React.FC = () => (
+  <AppProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
+  </AppProvider>
+);

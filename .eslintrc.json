@@ -1,0 +1,121 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb-base",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "plugin:eslint-comments/recommended"
+  ],
+  "ignorePatterns": [
+    "**/node_modules/**/*.*",
+    "**/*.svg",
+    "**/out/**",
+    "*.config.ts",
+    "*.config.js",
+    "**/*.demo.ts"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "tsconfigRootDir": "./"
+  },
+  "plugins": ["simple-import-sort", "import"],
+  "rules": {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "d.ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": ["**/*.stories.tsx", "**/*.test.tsx"] }
+    ],
+    "import/no-cycle": "off", // TODO: One day do this refactor
+    "import/order": "off",
+    "import/prefer-default-export": "off",
+    "import/no-default-export": "error",
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { "exceptAfterSingleLine": true }
+    ],
+    "newline-before-return": "error",
+    "no-restricted-syntax": [
+      "error",
+      "ForInStatement",
+      "LabeledStatement",
+      "WithStatement"
+    ],
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-use-before-define": "off",
+    "no-warning-comments": "warn",
+    "simple-import-sort/imports": [
+      "warn",
+      {
+        "groups": [
+          ["^react"],
+          ["^\\u0000"],
+          ["^"],
+          ["^\\."],
+          [".png", ".svg"],
+          ["(\\.scss|classnames)"]
+        ]
+      }
+    ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "error",
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "ignoreRestSiblings": true
+      }
+    ],
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ],
+    "eslint-comments/no-use": "warn",
+    "eslint-comments/require-description": "error"
+  },
+  "settings": {
+    "import/parser": {
+      "@typescript-eslint/parser": [".ts", ".tsx", ".d.ts"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    },
+    "react": {
+      "version": "17"
+    }
+  },
+  "overrides": [
+    {
+      "files": "*.stories.tsx",
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}

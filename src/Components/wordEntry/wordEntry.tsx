@@ -4,29 +4,27 @@ import { Button } from '@components/button/button';
 import { DebugState } from '@state/debugger';
 import { Word } from 'wordbucket';
 
-import styles from './wordEdit.module.scss';
+import styles from './wordEntry.module.scss';
 import classNames from 'classnames';
 
-export interface IWordEditProps {
+export interface IWordEntryProps {
   word: Word;
   className?: string;
 }
 
-export const WordEdit: React.FC<IWordEditProps> = ({ word, className }) => {
+export const WordEntry: React.FC<IWordEntryProps> = ({ word, className }) => {
   const words = word.words.split(' ');
   const { keys } = React.useContext(DebugState);
 
   return (
     <div className={classNames(className, styles.content)}>
-      <input className={styles.words} value={word.words} />
-      <input className={styles.weight} value={word.weight} />
       <div className={styles.values}>
         {words.map((value, index) => (
           <span key={index}>{value} </span>
         ))}
       </div>
-      <Button className={styles.save} onClick={console.log}>
-        Save
+      <Button className={styles.edit} onClick={console.log}>
+        Edit
       </Button>
     </div>
   );

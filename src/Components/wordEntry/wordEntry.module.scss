@@ -1,0 +1,16 @@
+@use '@styles/variables';
+
+.content {
+  display: grid;
+  grid-template: 'text text edit';
+  grid-template-columns: 70% 15% 15%;
+  grid-template-rows: 2rem auto;
+
+  .edit {
+    grid-area: edit;
+  }
+
+  .values {
+    grid-area: text;
+  }
+}

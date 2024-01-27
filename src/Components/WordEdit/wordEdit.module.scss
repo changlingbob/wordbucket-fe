@@ -1,0 +1,24 @@
+@use '@styles/variables';
+
+.content {
+  display: grid;
+  grid-template: 'words weight save' 'text text save';
+  grid-template-columns: 70% 15% 15%;
+  grid-template-rows: 2rem auto;
+
+  .words {
+    grid-area: words;
+  }
+
+  .weight {
+    grid-area: weight;
+  }
+
+  .save {
+    grid-area: save;
+  }
+
+  .values {
+    grid-area: text;
+  }
+}

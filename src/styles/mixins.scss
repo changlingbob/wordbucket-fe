@@ -1,0 +1,18 @@
+@use 'sass:color';
+@import './variables.scss';
+
+@mixin pinline {
+  border: 1px solid $pin-line;
+}
+
+@mixin border($color) {
+  border: $ui-border $color solid;
+}
+
+@mixin panel-border($color) {
+  @include border($color);
+
+  border-color: color.adjust($color, $lightness: 10%)
+    color.adjust($color, $lightness: -5%) color.adjust($color, $lightness: -10%)
+    color.adjust($color, $lightness: 5%);
+}

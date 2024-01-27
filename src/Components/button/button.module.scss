@@ -1,0 +1,15 @@
+@use '../../styles/mixins.scss';
+@use '../../styles/variables.scss';
+
+.button {
+  background: variables.$neutral-darker;
+  background: var(--color);
+
+  @include mixins.border(variables.$pin-highlight);
+
+  &[data-disabled='true'] {
+    background: variables.$neutral-darker;
+
+    @include mixins.border(variables.$pin-line);
+  }
+}

@@ -1,12 +1,13 @@
-import { Bucket, WordManager } from "wordbucket";
+import { Bucket, WordManager } from 'wordbucket';
+
 import {
   createFile,
   deleteFile,
   getFileIds,
   loadFile,
   saveFile,
-} from "./fileHelper";
-import { Undoable } from "./undomanager";
+} from './fileHelper';
+import { Undoable } from './undomanager';
 
 // Figuring out how do to this was a pain. It critically doesn't use an NPM module
 // because there isn't one that does the right stuff properly that I could find.
@@ -24,39 +25,34 @@ export interface IFileData {
   data?: string;
 }
 
-class GoogleManager {
-  private GoogleAuth?: gapi.auth2.GoogleAuth;
+export class GoogleManager {
+  private GoogleAuth?: gapi.auth2.GoogleAuthBase;
   private files: IFileData[] = [];
   private clientId: string =
-    "404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com";
+    '404024621165-t0sbcvfkac2m8u4b8l3p04hm9r2jtqcg.apps.googleusercontent.com';
+
   private loadBucket: (bucketString: string) => void;
 
   constructor(load: (bucketString: string) => void) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias -- magic
     const self = this;
     this.loadBucket = load;
 
-    const clientIdTag = document.createElement("meta");
-    clientIdTag.name = "google-signin-client_id";
+    const clientIdTag = document.createElement('meta');
+    clientIdTag.name = 'google-signin-client_id';
     clientIdTag.content = this.clientId;
     document.head.appendChild(clientIdTag);
 
-    const scopeTag = document.createElement("meta");
-    scopeTag.name = "google-signin-scope";
-    scopeTag.content = "https://www.googleapis.com/auth/drive.appdata";
+    const scopeTag = document.createElement('meta');
+    scopeTag.name = 'google-signin-scope';
+    scopeTag.content = 'https://www.googleapis.com/auth/drive.appdata';
     document.head.appendChild(scopeTag);
 
-    const apiElement = document.createElement("script");
-    apiElement.src = "https://apis.google.com/js/platform.js";
-    apiElement.type = "text/javascript";
-    apiElement.charset = "utf-8";
+    const apiElement = document.createElement('script');
+    apiElement.src = 'https://apis.google.com/js/platform.js';
+    apiElement.type = 'text/javascript';
+    apiElement.charset = 'utf-8';
     document.head.appendChild(apiElement);
-    apiElement.onload = () => {
-      gapi.load("auth2", () => {
-        gapi.load("client", () => {
-          gapi.client.load("drive", "v3", initGapi);
-        });
-      });
-    };
 
     const initGapi = () => {
       gapi.auth2.getAuthInstance().then(
@@ -72,6 +68,14 @@ class GoogleManager {
         }
       );
     };
+
+    apiElement.onload = () => {
+      gapi.load('auth2', () => {
+        gapi.load('client', () => {
+          gapi.client.load('drive', 'v3', initGapi);
+        });
+      });
+    };
   }
 
   public save = async () => {
@@ -84,15 +88,16 @@ class GoogleManager {
       const add: IFileData[] = [];
 
       for (const bucketName of bucketNames.filter(
-        (name) => name.indexOf(".") === -1
+        (name) => name.indexOf('.') === -1
       )) {
-        const fileName = bucketName + ".json";
+        const fileName = `${bucketName}.json`;
         data[fileName] = WordManager.serialise(
           ...bucketNames.filter((bucket) => bucket.indexOf(bucketName) === 0)
         );
         if (
           this.files.filter((file) => file.fileName === fileName).length === 0
         ) {
+          // eslint-disable-next-line no-await-in-loop -- saving multiple files here
           add.push(await createFile(fileName));
         }
       }
@@ -108,7 +113,10 @@ class GoogleManager {
           remove.filter((removal) => removal.fileId === file.fileId).length ===
           0
       );
-      this.files.forEach((file) => (file.data = data[file.fileName]));
+      this.files.forEach((file) => {
+        // eslint-disable-next-line no-param-reassign -- constructing data objects
+        file.data = data[file.fileName];
+      });
       this.files = this.files.concat(add);
 
       await Promise.all(remove.map(deleteFile));
@@ -123,9 +131,7 @@ class GoogleManager {
       data.forEach((file) => file.data && this.loadBucket(file.data));
       this.files = data;
     } catch (e) {
-      this.loadBucket("");
+      this.loadBucket('');
     }
   };
 }
-
-export default GoogleManager;

@@ -1,4 +1,5 @@
-import { Bucket, Word, WordManager } from "wordbucket";
+/* eslint-disable no-new -- we're doing undo magic */
+import { Bucket, Word, WordManager } from 'wordbucket';
 
 interface IUndoableProps {
   dispatch?: () => void;
@@ -30,11 +31,11 @@ export class Undoable {
   };
 
   public static setSave(save: () => void) {
-    window.addEventListener("beforeunload", (e) => {
+    window.addEventListener('beforeunload', (e) => {
       if (Undoable.saveOutstanding) {
         Undoable.save();
         e.preventDefault();
-        e.returnValue = "save in progress";
+        e.returnValue = 'save in progress';
       }
     });
     Undoable.save = save;
@@ -140,3 +141,4 @@ export function removeBucket(bucket: Bucket, dispatch: () => void) {
     undo: () => WordManager.attach(bucketBackup),
   });
 }
+/* eslint-enable no-new -- we're doing undo magic */
